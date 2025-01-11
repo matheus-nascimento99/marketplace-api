@@ -1,13 +1,15 @@
 import { AggregateRoot } from 'src/core/entities/aggregate-root'
-import { SellerAttachment } from './seller-attachment'
 import { Optional } from 'src/core/@types/optional'
 import { UniqueEntityId } from 'src/core/value-objects/unique-entity-id'
+import { SellerAvatar } from './seller-avatar'
+import { Raw } from '@/core/value-objects/raw'
 
 export type SellerProps = {
   name: string
-  phone: string
+  phone: Raw
   email: string
-  avatar?: SellerAttachment | null
+  avatar?: SellerAvatar | null
+  password: string
   createdAt: Date
   updatedAt?: Date | null
 }
@@ -26,7 +28,7 @@ export class Seller extends AggregateRoot<SellerProps> {
     return this.props.phone
   }
 
-  set phone(value: string) {
+  set phone(value: Raw) {
     this.props.phone = value
     this.touch()
   }
@@ -44,8 +46,17 @@ export class Seller extends AggregateRoot<SellerProps> {
     return this.props.avatar
   }
 
-  set avatar(value: SellerAttachment | null | undefined) {
+  set avatar(value: SellerAvatar | null | undefined) {
     this.props.avatar = value
+    this.touch()
+  }
+
+  get password() {
+    return this.props.password
+  }
+
+  set password(value: string) {
+    this.props.password = value
     this.touch()
   }
 

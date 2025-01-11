@@ -1,6 +1,6 @@
 # Funcionalidades e Regras
 
-[ ] - Deve ser possível cadastrar novos usuários
+[X] - Deve ser possível cadastrar novos usuários
   [ ] - Deve ser feito o hash da senha do usuário
   [ ] - Não deve ser possível cadastrar usuário com e-mail duplicado
   [ ] - Não deve ser possível cadastrar usuário com telefone duplicado

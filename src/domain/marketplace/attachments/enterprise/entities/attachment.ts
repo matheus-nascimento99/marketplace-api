@@ -1,5 +1,5 @@
-import { UniqueEntityId } from '../value-objects/unique-entity-id'
-import { Entity } from './entity'
+import { Entity } from '@/core/entities/entity'
+import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 
 export type AttachmentProps = {
   key: string
