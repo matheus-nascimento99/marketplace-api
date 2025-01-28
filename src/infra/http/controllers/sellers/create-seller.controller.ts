@@ -18,6 +18,7 @@ import { harden } from '@/utils/harden'
 import { capitalize } from '@/utils/capitalize'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { SellersPresenter } from '../../presenters/sellers'
+import { Public } from '@/auth/public'
 
 const createSellerSchema = z
   .object({
@@ -88,6 +89,7 @@ export class CreateSellerController {
   constructor(private createSellerUseCase: CreateSellerUseCase) {}
 
   @Post()
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create new seller' })
   @ApiBody({

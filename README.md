@@ -1,11 +1,10 @@
 # Funcionalidades e Regras
 
 [X] - Deve ser possível cadastrar novos usuários
-  [ ] - Deve ser feito o hash da senha do usuário
-  [ ] - Não deve ser possível cadastrar usuário com e-mail duplicado
-  [ ] - Não deve ser possível cadastrar usuário com telefone duplicado
+  [X] - Deve ser feito o hash da senha do usuário
+  [X] - Não deve ser possível cadastrar usuário com e-mail duplicado
+  [X] - Não deve ser possível cadastrar usuário com telefone duplicado
 [ ] - Deve ser possível atualizar os dados do usuário
-  [ ] - Deve ser feito o hash da senha do usuário
   [ ] - Não deve ser possível atualizar para um e-mail duplicado
   [ ] - Não deve ser possível atualizar para um telefone duplicado
 [ ] - Deve ser possível obter o token de autenticação

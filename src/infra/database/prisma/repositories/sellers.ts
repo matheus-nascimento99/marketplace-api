@@ -39,8 +39,8 @@ export class PrismaSellersRepository implements SellersRepository {
   }
 
   async findByEmail(sellerEmail: string): Promise<Seller | null> {
-    const seller = await this.prisma.user.findUnique({
-      where: { email: sellerEmail },
+    const seller = await this.prisma.user.findFirst({
+      where: { email: { equals: sellerEmail, mode: 'insensitive' } },
     })
 
     if (!seller) {

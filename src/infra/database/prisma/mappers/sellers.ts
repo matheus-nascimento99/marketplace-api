@@ -24,7 +24,7 @@ export class PrismaSellersMapper {
       name: seller.name,
       email: seller.email,
       phone: seller.phone.value,
-      password: seller.email,
+      password: seller.password,
       role: 'SELLER',
       createdAt: seller.createdAt,
       updatedAt: seller.updatedAt,

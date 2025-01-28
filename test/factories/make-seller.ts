@@ -6,8 +6,10 @@ import {
 } from '@/domain/marketplace/sellers/enterprise/seller'
 import { PrismaSellersMapper } from '@/infra/database/prisma/mappers/sellers'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { DEFAULT_PASSWORD } from '@/utils/default-password'
 import { faker } from '@faker-js/faker'
 import { Injectable } from '@nestjs/common'
+import { hash } from 'bcryptjs'
 
 export const makeSeller = (
   overrides: Partial<SellerProps>,
@@ -32,6 +34,7 @@ export class SellerFactory {
   async makePrismaSeller(override: Partial<SellerProps> = {}) {
     const seller = makeSeller({
       ...override,
+      password: await hash(override.password ?? DEFAULT_PASSWORD, 8),
     })
 
     const data = PrismaSellersMapper.toPrisma(seller)
