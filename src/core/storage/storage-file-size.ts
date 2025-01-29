@@ -1,0 +1,2 @@
+export const MAX_FILE_SIZE = 5 // 5 MB
+export const MAX_FILE_SIZE_IN_BYTES = 1024 * 1024 * MAX_FILE_SIZE // 5242880 BYTES

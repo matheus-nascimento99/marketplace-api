@@ -30,7 +30,7 @@ describe('Create seller use case', () => {
 
   it('should be able to create seller', async () => {
     const avatar = makeAttachment({})
-    inMemoryAttachmentsRepository.create(avatar)
+    inMemoryAttachmentsRepository.items.push(avatar)
 
     const result = await sut.execute({
       name: faker.person.fullName(),

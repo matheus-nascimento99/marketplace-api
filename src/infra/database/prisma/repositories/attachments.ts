@@ -9,10 +9,12 @@ import { PrismaAttachmentsMapper } from '../mappers/attachments'
 export class PrismaAttachmentsRepository implements AttachmentsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async create(attachment: Attachment): Promise<void> {
-    const data = PrismaAttachmentsMapper.toPrisma(attachment)
+  async createMany(attachments: Attachment[]): Promise<void> {
+    const data = attachments.map((attachment) =>
+      PrismaAttachmentsMapper.toPrisma(attachment),
+    )
 
-    await this.prisma.attachment.create({
+    await this.prisma.attachment.createMany({
       data,
     })
   }

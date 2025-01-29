@@ -5,8 +5,8 @@ import { Attachment } from '@/domain/marketplace/attachments/enterprise/entities
 export class InMemoryAttachmentsRepository implements AttachmentsRepository {
   public items: Attachment[] = []
 
-  async create(attachment: Attachment): Promise<void> {
-    this.items.push(attachment)
+  async createMany(attachments: Attachment[]): Promise<void> {
+    this.items.push(...attachments)
   }
 
   async findById(attachmentId: UniqueEntityId): Promise<Attachment | null> {
