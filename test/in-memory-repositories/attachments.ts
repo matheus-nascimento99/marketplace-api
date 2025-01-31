@@ -18,4 +18,12 @@ export class InMemoryAttachmentsRepository implements AttachmentsRepository {
 
     return attachment
   }
+
+  async delete(attachmentId: UniqueEntityId): Promise<void> {
+    const attachmentIndex = this.items.findIndex((item) =>
+      item.id.equals(attachmentId),
+    )
+
+    this.items.splice(attachmentIndex, 1)
+  }
 }

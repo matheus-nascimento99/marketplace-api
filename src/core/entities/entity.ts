@@ -18,6 +18,10 @@ export abstract class Entity<Props> {
       return false
     }
 
+    if (!entity.id.equals(this._id)) {
+      return false
+    }
+
     return true
   }
 }

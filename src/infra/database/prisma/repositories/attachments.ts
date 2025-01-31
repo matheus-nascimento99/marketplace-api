@@ -30,4 +30,16 @@ export class PrismaAttachmentsRepository implements AttachmentsRepository {
 
     return PrismaAttachmentsMapper.toDomain(attachment)
   }
+
+  async findByUserId(userId: UniqueEntityId): Promise<Attachment | null> {
+    const attachment = await this.prisma.attachment.findUnique({
+      where: { userId: userId.toString() },
+    })
+
+    if (!attachment) {
+      return null
+    }
+
+    return PrismaAttachmentsMapper.toDomain(attachment)
+  }
 }

@@ -6,8 +6,10 @@ import { FakeCryptographer } from 'test/cryptography/fake-cryptographer'
 import { DEFAULT_PASSWORD } from '@/utils/default-password'
 import { faker } from '@faker-js/faker'
 import { InvalidCredentialsError } from '@/core/errors/invalid-credentials'
+import { InMemorySellersAvatarsRepository } from 'test/in-memory-repositories/sellers-avatars'
 
 let inMemorySellersRepository: InMemorySellersRepository
+let inMemorySellersAvatarsRepository: InMemorySellersAvatarsRepository
 let fakeCryptographer: FakeCryptographer
 let fakeHasher: FakeHasher
 
@@ -15,7 +17,10 @@ let sut: AuthenticateSellerUseCase
 
 describe('Authenticate seller use case', () => {
   beforeEach(() => {
-    inMemorySellersRepository = new InMemorySellersRepository()
+    inMemorySellersAvatarsRepository = new InMemorySellersAvatarsRepository()
+    inMemorySellersRepository = new InMemorySellersRepository(
+      inMemorySellersAvatarsRepository,
+    )
     fakeHasher = new FakeHasher()
     fakeCryptographer = new FakeCryptographer()
 

@@ -9,6 +9,8 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
+  app.enableCors()
+
   app.use(cookieParser())
 
   const config = new DocumentBuilder()

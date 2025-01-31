@@ -42,7 +42,7 @@ model Product {
 
 model Attachment {
   id        String    @id @default(uuid())
-  userId    String?   @map("user_id")
+  userId    String?   @unique @map("user_id")
   productId String?   @map("product_id")
   key       String
   expiresAt DateTime? @map("expires_at")

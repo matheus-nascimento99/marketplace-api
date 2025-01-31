@@ -69,5 +69,9 @@ export class PrismaSellersRepository implements SellersRepository {
       where: { id: sellerId.toString() },
       data,
     })
+
+    if (!seller.avatar) return
+
+    await this.prismaSellersAvatarsRepository.create(seller.avatar)
   }
 }

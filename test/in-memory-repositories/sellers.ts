@@ -2,12 +2,21 @@ import { Raw } from '@/core/value-objects/raw'
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import { SellersRepository } from '@/domain/marketplace/sellers/application/repositories/sellers'
 import { Seller } from '@/domain/marketplace/sellers/enterprise/seller'
+import { InMemorySellersAvatarsRepository } from './sellers-avatars'
 
 export class InMemorySellersRepository implements SellersRepository {
+  constructor(
+    private inMemorySellersAvatarsRepository: InMemorySellersAvatarsRepository,
+  ) {}
+
   public items: Seller[] = []
 
   async create(seller: Seller): Promise<void> {
     this.items.push(seller)
+
+    if (!seller.avatar) return
+
+    await this.inMemorySellersAvatarsRepository.create(seller.avatar)
   }
 
   async findById(sellerId: UniqueEntityId): Promise<Seller | null> {
@@ -44,5 +53,9 @@ export class InMemorySellersRepository implements SellersRepository {
     const sellerIndex = this.items.findIndex((item) => item.id.equals(sellerId))
 
     this.items[sellerIndex] = seller
+
+    if (!seller.avatar) return
+
+    await this.inMemorySellersAvatarsRepository.create(seller.avatar)
   }
 }

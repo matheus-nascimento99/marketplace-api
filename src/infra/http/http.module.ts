@@ -9,16 +9,20 @@ import { AuthenticateSellerUseCase } from '@/domain/marketplace/sellers/applicat
 import { SaveAttachmentsController } from './controllers/attachments/save-attachments.controller'
 import { SaveAttachmentsUseCase } from '@/domain/marketplace/attachments/application/use-cases/save-attachments'
 import { StorageModule } from '../storage/storage.module'
+import { EditSellerController } from './controllers/sellers/edit-seller.controller'
+import { EditSellerUseCase } from '@/domain/marketplace/sellers/application/use-cases/edit-seller'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
   controllers: [
     CreateSellerController,
+    EditSellerController,
     AuthenticateSellerController,
     SaveAttachmentsController,
   ],
   providers: [
     CreateSellerUseCase,
+    EditSellerUseCase,
     AuthenticateSellerUseCase,
     SaveAttachmentsUseCase,
   ],

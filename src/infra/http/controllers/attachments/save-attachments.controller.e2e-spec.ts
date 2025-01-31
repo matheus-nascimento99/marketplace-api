@@ -25,7 +25,7 @@ describe('Save attachments (e2e)', () => {
     await app.init()
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     const folderPath = './tmp/test'
     const files = await fs.readdir(folderPath)
 

@@ -10,7 +10,10 @@ import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class DiskStorage implements StorageUploader, StorageDownloader {
-  constructor(private env: EnvService) {}
+  private isTest: boolean
+  constructor(private env: EnvService) {
+    this.isTest = this.env.get('NODE_ENV') === 'test'
+  }
 
   async upload({
     uploads,
@@ -22,18 +25,17 @@ export class DiskStorage implements StorageUploader, StorageDownloader {
 
       uploadsKeys.push(uniqueFileName)
 
-      const tempPath =
-        this.env.get('NODE_ENV') === 'test'
-          ? path.resolve(
-              __dirname,
-              '..',
-              '..',
-              '..',
-              'tmp',
-              'test',
-              uniqueFileName,
-            )
-          : path.resolve(__dirname, '..', '..', '..', 'tmp', uniqueFileName)
+      const tempPath = this.isTest
+        ? path.resolve(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            'tmp',
+            'test',
+            uniqueFileName,
+          )
+        : path.resolve(__dirname, '..', '..', '..', 'tmp', uniqueFileName)
 
       fs.writeFileSync(tempPath, upload.body)
     })
@@ -45,10 +47,9 @@ export class DiskStorage implements StorageUploader, StorageDownloader {
 
   async download(keys: string[]): Promise<void> {
     const unlinkFiles = keys.map((key) => {
-      const tempPath =
-        this.env.get('NODE_ENV') === 'test'
-          ? path.resolve(__dirname, '..', '..', '..', 'tmp', 'test', key)
-          : path.resolve(__dirname, '..', '..', '..', 'tmp', key)
+      const tempPath = this.isTest
+        ? path.resolve(__dirname, '..', '..', '..', 'tmp', 'test', key)
+        : path.resolve(__dirname, '..', '..', '..', 'tmp', key)
 
       return async () => {
         await unlink(tempPath)

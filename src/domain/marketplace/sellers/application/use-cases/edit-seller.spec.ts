@@ -1,63 +1,68 @@
 import { InMemorySellersRepository } from 'test/in-memory-repositories/sellers'
-import { CreateSellerUseCase } from './create-seller'
-import { FakeHasher } from 'test/hash/fake-hasher'
+import { EditSellerUseCase } from './edit-seller'
 import { InMemoryAttachmentsRepository } from 'test/in-memory-repositories/attachments'
-import { makeAttachment } from 'test/factories/make-attachment'
-import { faker } from '@faker-js/faker'
+import { InMemorySellersAvatarsRepository } from 'test/in-memory-repositories/sellers-avatars'
+import { FakeStorage } from 'test/storage/fake-storage'
 import { makeSeller } from 'test/factories/make-seller'
+import { faker } from '@faker-js/faker'
+import { makeAttachment } from 'test/factories/make-attachment'
 import { SellerWithEmailAlreadyExists } from './errors/seller-with-email-already-exists'
 import { SellerWithPhoneAlreadyExists } from './errors/seller-with-phone-already-exists'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
-import { InMemorySellersAvatarsRepository } from 'test/in-memory-repositories/sellers-avatars'
 
-let inMemorySellersAvatarsRepository: InMemorySellersAvatarsRepository
 let inMemorySellersRepository: InMemorySellersRepository
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository
-let fakeHasher: FakeHasher
+let inMemorySellersAvatarsRepository: InMemorySellersAvatarsRepository
+let fakeStorage: FakeStorage
 
-let sut: CreateSellerUseCase
+let sut: EditSellerUseCase
 
-describe('Create seller use case', () => {
+describe('Edit seller use case', () => {
   beforeEach(() => {
     inMemorySellersAvatarsRepository = new InMemorySellersAvatarsRepository()
     inMemorySellersRepository = new InMemorySellersRepository(
       inMemorySellersAvatarsRepository,
     )
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
-    fakeHasher = new FakeHasher()
+    fakeStorage = new FakeStorage()
 
-    sut = new CreateSellerUseCase(
+    sut = new EditSellerUseCase(
       inMemorySellersRepository,
       inMemoryAttachmentsRepository,
-      fakeHasher,
+      inMemorySellersAvatarsRepository,
+      fakeStorage,
     )
   })
 
-  it('should be able to create seller', async () => {
+  it('should be able to edit seller', async () => {
     const avatar = makeAttachment({})
     inMemoryAttachmentsRepository.items.push(avatar)
 
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
     const result = await sut.execute({
+      sellerId: seller.id.toString(),
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
       phone: faker.phone.number(),
       avatarId: avatar.id.toString(),
     })
 
     expect(result.isRight()).toEqual(true)
-    expect(inMemorySellersRepository.items).toHaveLength(1)
-    expect(inMemorySellersAvatarsRepository.items).toHaveLength(1)
   })
 
-  it('should not be able to create seller with email from another', async () => {
+  it('should not be able to edit seller with email from another', async () => {
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
+    const anotherSeller = makeSeller({})
+    inMemorySellersRepository.create(anotherSeller)
+
     const result = await sut.execute({
+      sellerId: seller.id.toString(),
       name: faker.person.fullName(),
-      email: seller.email,
-      password: faker.internet.password(),
+      email: anotherSeller.email,
       phone: faker.phone.number(),
       avatarId: null,
     })
@@ -66,15 +71,18 @@ describe('Create seller use case', () => {
     expect(result.value).toBeInstanceOf(SellerWithEmailAlreadyExists)
   })
 
-  it('should not be able to create seller with phone from another', async () => {
+  it('should not be able to edit seller with phone from another', async () => {
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
+    const anotherSeller = makeSeller({})
+    inMemorySellersRepository.create(anotherSeller)
+
     const result = await sut.execute({
+      sellerId: seller.id.toString(),
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
-      phone: seller.phone.value,
+      phone: anotherSeller.phone.value,
       avatarId: null,
     })
 
@@ -82,11 +90,17 @@ describe('Create seller use case', () => {
     expect(result.value).toBeInstanceOf(SellerWithPhoneAlreadyExists)
   })
 
-  it('should not be able to create seller with a non existent avatar', async () => {
+  it('should not be able to edit seller with a non existent avatar', async () => {
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
+    const anotherSeller = makeSeller({})
+    inMemorySellersRepository.create(anotherSeller)
+
     const result = await sut.execute({
+      sellerId: seller.id.toString(),
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
       phone: faker.phone.number(),
       avatarId: faker.string.uuid(),
     })
