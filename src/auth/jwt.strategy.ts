@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return {
       jwtFromRequest: ExtractJwt.fromExtractors([
         ExtractJwt.fromAuthHeaderAsBearerToken(),
-        JwtStrategy.extractJwtFromCookiesAsRefreshToken,
+        JwtStrategy.extractJwtFromCookies,
       ]),
       secretOrKey: Buffer.from(publicKey, 'base64'),
       algorithms: ['RS256'],
@@ -37,10 +37,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
   }
 
-  private static extractJwtFromCookiesAsRefreshToken(
-    req: Request,
-  ): string | null {
-    return req.cookies?.refresh_token || null
+  private static extractJwtFromCookies(req: Request): string | null {
+    if (!req.headers.cookie) return null
+
+    const accessToken = req.headers.cookie.split('=')[1]
+    return accessToken
   }
 
   async validate(req: Request, payload: UserPayload) {

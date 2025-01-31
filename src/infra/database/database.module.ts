@@ -6,6 +6,8 @@ import { AttachmentsRepository } from '@/domain/marketplace/attachments/applicat
 import { PrismaAttachmentsRepository } from './prisma/repositories/attachments'
 import { PrismaSellersAvatarsRepository } from './prisma/repositories/sellers-avatars'
 import { SellersAvatarsRepository } from '@/domain/marketplace/sellers/application/repositories/sellers-avatars'
+import { CategoriesRepository } from '@/domain/marketplace/products/application/repositories/categories'
+import { PrismaCategoriesRepository } from './prisma/repositories/categories'
 
 @Module({
   providers: [
@@ -17,12 +19,14 @@ import { SellersAvatarsRepository } from '@/domain/marketplace/sellers/applicati
       provide: SellersAvatarsRepository,
       useClass: PrismaSellersAvatarsRepository,
     },
+    { provide: CategoriesRepository, useClass: PrismaCategoriesRepository },
   ],
   exports: [
     PrismaService,
     SellersRepository,
     AttachmentsRepository,
     SellersAvatarsRepository,
+    CategoriesRepository,
   ],
 })
 export class DatabaseModule {}

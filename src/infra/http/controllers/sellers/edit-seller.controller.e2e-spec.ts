@@ -9,10 +9,12 @@ import { SellerFactory } from 'test/factories/make-seller'
 import { AttachmentFactory } from 'test/factories/make-attachment'
 import path from 'node:path'
 import fs from 'fs/promises'
+import { JwtService } from '@nestjs/jwt'
 
 describe('Edit seller (e2e)', () => {
   let app: INestApplication
   let prisma: PrismaService
+  let jwt: JwtService
   let sellerFactory: SellerFactory
 
   beforeAll(async () => {
@@ -24,6 +26,8 @@ describe('Edit seller (e2e)', () => {
     app = moduleRef.createNestApplication()
 
     prisma = moduleRef.get(PrismaService)
+
+    jwt = moduleRef.get(JwtService)
 
     sellerFactory = moduleRef.get(SellerFactory)
 
@@ -44,7 +48,7 @@ describe('Edit seller (e2e)', () => {
     }
   })
 
-  test('/sellers/:seller_id (PUT)', async () => {
+  test('/sellers (PUT)', async () => {
     const { body } = await request(app.getHttpServer())
       .post('/attachments')
       .attach('files', './test/storage/sample-upload.jpg')
@@ -53,8 +57,11 @@ describe('Edit seller (e2e)', () => {
 
     const seller = await sellerFactory.makePrismaSeller({})
 
+    const accessToken = await jwt.signAsync({ sub: seller.id.toString() })
+
     await request(app.getHttpServer())
-      .put(`/sellers/${seller.id.toString()}`)
+      .put(`/sellers`)
+      .set('Cookie', [`access_token=${accessToken}`])
       .send({
         name: 'John Smith',
         email: 'john.smith@example.com',
@@ -84,7 +91,8 @@ describe('Edit seller (e2e)', () => {
     expect(sellerAvatar?.userId).toEqual(seller.id.toString())
 
     await request(app.getHttpServer())
-      .put(`/sellers/${seller.id.toString()}`)
+      .put(`/sellers`)
+      .set('Cookie', [`access_token=${accessToken}`])
       .send({
         name: 'John Smith',
         email: 'john.smith@example.com',
@@ -104,7 +112,8 @@ describe('Edit seller (e2e)', () => {
     const anotherAvatar = anotherBody.attachments[0]
 
     await request(app.getHttpServer())
-      .put(`/sellers/${seller.id.toString()}`)
+      .put(`/sellers`)
+      .set('Cookie', [`access_token=${accessToken}`])
       .send({
         name: 'John Smith',
         email: 'john.smith@example.com',

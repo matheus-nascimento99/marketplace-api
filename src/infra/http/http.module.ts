@@ -11,6 +11,8 @@ import { SaveAttachmentsUseCase } from '@/domain/marketplace/attachments/applica
 import { StorageModule } from '../storage/storage.module'
 import { EditSellerController } from './controllers/sellers/edit-seller.controller'
 import { EditSellerUseCase } from '@/domain/marketplace/sellers/application/use-cases/edit-seller'
+import { FetchCategoriesController } from './controllers/categories/fetch-categories.controller'
+import { FetchCategoriesUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-categories'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -19,12 +21,14 @@ import { EditSellerUseCase } from '@/domain/marketplace/sellers/application/use-
     EditSellerController,
     AuthenticateSellerController,
     SaveAttachmentsController,
+    FetchCategoriesController,
   ],
   providers: [
     CreateSellerUseCase,
     EditSellerUseCase,
     AuthenticateSellerUseCase,
     SaveAttachmentsUseCase,
+    FetchCategoriesUseCase,
   ],
 })
 export class HttpModule {}

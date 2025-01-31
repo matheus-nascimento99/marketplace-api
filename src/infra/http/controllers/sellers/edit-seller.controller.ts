@@ -10,22 +10,16 @@ import {
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
-  Param,
   Put,
 } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation'
 import { harden } from '@/utils/harden'
 import { capitalize } from '@/utils/capitalize'
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { SellersPresenter } from '../../presenters/sellers'
-import { Public } from '@/auth/public'
+import { CurrentUser } from '@/auth/current-user'
+import { UserPayload } from '@/auth/jwt.strategy'
 
 const editSellerSchema = z.object({
   name: z
@@ -68,21 +62,13 @@ const editSellerSchema = z.object({
 type EditSellerSchema = z.infer<typeof editSellerSchema>
 
 @ApiTags('Sellers')
-@Controller('/sellers/:seller_id')
+@Controller('/sellers')
 export class EditSellerController {
   constructor(private editSellerUseCase: EditSellerUseCase) {}
 
   @Put()
-  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Edit seller' })
-  @ApiParam({
-    name: 'seller_id',
-    required: true,
-    description: 'ID of the seller to edit',
-    schema: { type: 'string' },
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
   @ApiBody({
     description: 'Edit seller data',
     examples: {
@@ -194,9 +180,12 @@ export class EditSellerController {
   })
   async handle(
     @Body(new ZodValidationPipe(editSellerSchema)) body: EditSellerSchema,
-    @Param('seller_id') sellerId: string,
+    @CurrentUser() user: UserPayload,
   ) {
-    const result = await this.editSellerUseCase.execute({ sellerId, ...body })
+    const result = await this.editSellerUseCase.execute({
+      sellerId: user.sub,
+      ...body,
+    })
 
     if (result.isLeft()) {
       const error = result.value
