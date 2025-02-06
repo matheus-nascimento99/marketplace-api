@@ -19,6 +19,36 @@ export class InMemoryAttachmentsRepository implements AttachmentsRepository {
     return attachment
   }
 
+  async findManyBetweenIds(
+    attachmentIds: UniqueEntityId[],
+  ): Promise<{ attachments: Attachment[]; notFoundIds: string[] }> {
+    const notFoundIds: string[] = []
+
+    const attachments = attachmentIds
+      .filter((attachmentId) => {
+        const isAttachmentBetweenIds = this.items.some((item) =>
+          item.id.equals(attachmentId),
+        )
+
+        if (isAttachmentBetweenIds) {
+          return true
+        }
+
+        notFoundIds.push(attachmentId.toString())
+
+        return false
+      })
+      .map((attachmentId) => {
+        const attachmentIndex = this.items.findIndex((item) =>
+          item.id.equals(attachmentId),
+        )
+
+        return this.items[attachmentIndex]
+      })
+
+    return { attachments, notFoundIds }
+  }
+
   async delete(attachmentId: UniqueEntityId): Promise<void> {
     const attachmentIndex = this.items.findIndex((item) =>
       item.id.equals(attachmentId),

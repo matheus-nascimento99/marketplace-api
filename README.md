@@ -12,12 +12,12 @@
 [X] - Deve ser possível realizar o upload de arquivos
 [X] - Deve ser possível listar todas as categorias
   [X] - Qualquer usuário deve poder obter a lista de categorias
-[ ] - Deve ser possível criar e editar um Produto
-  [ ] - Deve ser possível armazenar o valor do produto em centavos
-  [ ] - Não deve ser possível criar/editar um Produto com um usuário inexistente
-  [ ] - Não deve ser possível criar/editar um Produto com uma categoria inexistente
+[X] - Deve ser possível criar e editar um Produto
+  [X] - Deve ser possível armazenar o valor do produto em centavos
+  [X] - Não deve ser possível criar/editar um Produto com um usuário inexistente
+  [X] - Não deve ser possível criar/editar um Produto com uma categoria inexistente
   [ ] - Não deve ser possível criar/editar um Produto com imagens inexistentes
-  [ ] - Não deve ser possível editar um Produto inexistente
+  [X] - Não deve ser possível editar um Produto inexistente
   [ ] - Não deve ser possível alterar um Produto de outro usuário
   [ ] - Não deve ser possível editar um Produto já vendido
 [ ] - Deve ser possível obter dados de um Produto

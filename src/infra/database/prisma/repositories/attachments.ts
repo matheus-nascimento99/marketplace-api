@@ -31,6 +31,34 @@ export class PrismaAttachmentsRepository implements AttachmentsRepository {
     return PrismaAttachmentsMapper.toDomain(attachment)
   }
 
+  async findManyBetweenIds(
+    attachmentIds: UniqueEntityId[],
+  ): Promise<{ attachments: Attachment[]; notFoundIds: string[] }> {
+    const originalIds = attachmentIds.map((id) => id.toString())
+
+    const prismaAttachments = await this.prisma.attachment.findMany({
+      where: {
+        id: {
+          in: originalIds,
+        },
+      },
+    })
+
+    const foundIds = prismaAttachments.map((attachment) => attachment.id)
+    const notFoundIds = originalIds.filter(
+      (originalId) => !foundIds.includes(originalId),
+    )
+
+    const attachments = prismaAttachments.map((attachment) =>
+      PrismaAttachmentsMapper.toDomain(attachment),
+    )
+
+    return {
+      attachments,
+      notFoundIds,
+    }
+  }
+
   async findByUserId(userId: UniqueEntityId): Promise<Attachment | null> {
     const attachment = await this.prisma.attachment.findUnique({
       where: { userId: userId.toString() },
