@@ -2,7 +2,8 @@ import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import {
   SellerAvatar,
   SellerAvatarProps,
-} from '@/domain/marketplace/sellers/enterprise/seller-avatar'
+} from '@/domain/marketplace/sellers/enterprise/entities/seller-avatar'
+
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 

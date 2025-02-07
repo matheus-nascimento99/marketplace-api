@@ -1,8 +1,8 @@
 export abstract class ValueObject<Props> {
-  protected _value: Props
+  protected props: Props
 
   protected constructor(props: Props) {
-    this._value = props
+    this.props = props
   }
 
   equals(vo: ValueObject<unknown>) {
@@ -10,6 +10,6 @@ export abstract class ValueObject<Props> {
       return false
     }
 
-    return JSON.stringify(vo._value) === JSON.stringify(this._value)
+    return JSON.stringify(vo.props) === JSON.stringify(this.props)
   }
 }

@@ -24,8 +24,14 @@ describe('Create product use case', () => {
     inMemorySellersAvatarsRepository = new InMemorySellersAvatarsRepository()
     inMemorySellersRepository = new InMemorySellersRepository(
       inMemorySellersAvatarsRepository,
+      inMemoryAttachmentsRepository,
     )
-    inMemoryProductsRepository = new InMemoryProductsRepository()
+    inMemoryProductsRepository = new InMemoryProductsRepository(
+      inMemoryCategoriesRepository,
+      inMemorySellersRepository,
+      inMemorySellersAvatarsRepository,
+      inMemoryAttachmentsRepository,
+    )
 
     sut = new CreateProductUseCase(
       inMemoryProductsRepository,

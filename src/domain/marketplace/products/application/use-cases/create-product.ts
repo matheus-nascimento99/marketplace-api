@@ -3,13 +3,13 @@ import { Injectable } from '@nestjs/common'
 import { Product } from '../../enterprise/entities/product'
 import { ProductsRepository } from '../repositories/products'
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
-import { Attachment } from '@/domain/marketplace/attachments/enterprise/entities/attachment'
 import { SellersRepository } from '@/domain/marketplace/sellers/application/repositories/sellers'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
 import { CategoriesRepository } from '../repositories/categories'
 import { AttachmentsRepository } from '@/domain/marketplace/attachments/application/repositories/attachments'
 import { ProductImage } from '../../enterprise/entities/product-image'
 import { ProductImageList } from '../../enterprise/watched-lists/product-image-list'
+import { ProductWithDetails } from '../../enterprise/value-objects/product-with-details'
 
 export type CreateProductUseCaseRequest = {
   sellerId: string
@@ -23,8 +23,7 @@ export type CreateProductUseCaseRequest = {
 export type CreateProductUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    product: Product
-    images: Attachment[]
+    product: ProductWithDetails
   }
 >
 
@@ -93,8 +92,8 @@ export class CreateProductUseCase {
       product.images = productImagesList
     }
 
-    await this.productsRepository.create(product)
+    const productWithDetails = await this.productsRepository.create(product)
 
-    return right({ product, images: [] })
+    return right({ product: productWithDetails })
   }
 }

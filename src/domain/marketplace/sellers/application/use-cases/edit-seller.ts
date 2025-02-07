@@ -1,6 +1,5 @@
 import { Either, left, right } from '@/core/either'
 import { SellersRepository } from '../repositories/sellers'
-import { Seller } from '../../enterprise/seller'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
 import { AttachmentsRepository } from '@/domain/marketplace/attachments/application/repositories/attachments'
 import { Injectable } from '@nestjs/common'
@@ -11,7 +10,8 @@ import { SellerWithEmailAlreadyExists } from './errors/seller-with-email-already
 import { SellerWithPhoneAlreadyExists } from './errors/seller-with-phone-already-exists'
 import { StorageDownloader } from '@/core/storage/storage-downloader'
 import { SellersAvatarsRepository } from '../repositories/sellers-avatars'
-import { SellerAvatar } from '../../enterprise/seller-avatar'
+import { SellerAvatar } from '../../enterprise/entities/seller-avatar'
+import { SellerWithDetails } from '../../enterprise/value-objects/seller-with-details'
 
 export type EditSellerUseCaseRequest = {
   sellerId: string
@@ -26,8 +26,7 @@ export type EditSellerUseCaseResponse = Either<
   | SellerWithEmailAlreadyExists
   | SellerWithPhoneAlreadyExists,
   {
-    seller: Seller
-    avatar: Attachment | null
+    seller: SellerWithDetails
   }
 >
 
@@ -123,11 +122,13 @@ export class EditSellerUseCase {
     seller.phone = rawPhone
     seller.email = email
 
-    await this.sellersRepository.save(seller.id, seller)
+    const sellerWithDetails = await this.sellersRepository.save(
+      seller.id,
+      seller,
+    )
 
     return right({
-      seller,
-      avatar: avatarById,
+      seller: sellerWithDetails,
     })
   }
 }

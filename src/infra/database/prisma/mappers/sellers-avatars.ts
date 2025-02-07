@@ -1,5 +1,5 @@
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
-import { SellerAvatar } from '@/domain/marketplace/sellers/enterprise/seller-avatar'
+import { SellerAvatar } from '@/domain/marketplace/sellers/enterprise/entities/seller-avatar'
 import { Attachment as PrismaAttachment } from '@prisma/client'
 
 export class PrismaSellersAvatarsMapper {

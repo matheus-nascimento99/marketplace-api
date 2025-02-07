@@ -4,7 +4,7 @@ import { ValueObject } from '@/core/value-objects/value-object'
 import { ProductStatus } from '@prisma/client'
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import { Raw } from '@/core/value-objects/raw'
-import { Attachment } from '@/domain/marketplace/attachments/enterprise/entities/attachment'
+import { SellerAvatarWithDetails } from '@/domain/marketplace/sellers/enterprise/value-objects/seller-avatar-with-details'
 
 export type ProductWithDetailsProps = {
   productId: UniqueEntityId
@@ -14,7 +14,7 @@ export type ProductWithDetailsProps = {
     name: string
     phone: Raw
     email: string
-    avatar?: Attachment | null
+    avatar?: SellerAvatarWithDetails | null
   }
   category: Category
   description: string
@@ -26,39 +26,39 @@ export type ProductWithDetailsProps = {
 
 export class ProductWithDetails extends ValueObject<ProductWithDetailsProps> {
   get productId() {
-    return this.productId
+    return this.props.productId
   }
 
   get title() {
-    return this.title
+    return this.props.title
   }
 
   get seller() {
-    return this.seller
+    return this.props.seller
   }
 
   get category() {
-    return this.category
+    return this.props.category
   }
 
   get description() {
-    return this.description
+    return this.props.description
   }
 
   get priceInCents() {
-    return this.priceInCents
+    return this.props.priceInCents
   }
 
   get status() {
-    return this.status
+    return this.props.status
   }
 
   get images() {
-    return this.images
+    return this.props.images
   }
 
   get createdAt() {
-    return this.createdAt
+    return this.props.createdAt
   }
 
   static create(props: ProductWithDetailsProps) {

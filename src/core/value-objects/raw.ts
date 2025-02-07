@@ -2,7 +2,7 @@ import { ValueObject } from './value-object'
 
 export class Raw extends ValueObject<string> {
   get value() {
-    return this._value
+    return this.props
   }
 
   static create(value: string) {

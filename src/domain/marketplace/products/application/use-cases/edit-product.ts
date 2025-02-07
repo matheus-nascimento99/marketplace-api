@@ -1,9 +1,7 @@
 import { Either, left, right } from '@/core/either'
 import { Injectable } from '@nestjs/common'
-import { Product } from '../../enterprise/entities/product'
 import { ProductsRepository } from '../repositories/products'
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
-import { Attachment } from '@/domain/marketplace/attachments/enterprise/entities/attachment'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
 import { SellersRepository } from '@/domain/marketplace/sellers/application/repositories/sellers'
 import { CategoriesRepository } from '../repositories/categories'
@@ -11,6 +9,7 @@ import { AttachmentsRepository } from '@/domain/marketplace/attachments/applicat
 import { ProductsImagesRepository } from '../repositories/products-images'
 import { ProductImageList } from '../../enterprise/watched-lists/product-image-list'
 import { ProductImage } from '../../enterprise/entities/product-image'
+import { ProductWithDetails } from '../../enterprise/value-objects/product-with-details'
 
 export type EditProductUseCaseRequest = {
   productId: string
@@ -25,8 +24,7 @@ export type EditProductUseCaseRequest = {
 export type EditProductUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    product: Product
-    images: Attachment[]
+    product: ProductWithDetails
   }
 >
 
@@ -114,6 +112,11 @@ export class EditProductUseCase {
     product.description = description
     product.priceInCents = priceInCents
 
-    return right({ product, images: [] })
+    const productWithDetails = await this.productsRepository.save(
+      product.id,
+      product,
+    )
+
+    return right({ product: productWithDetails })
   }
 }

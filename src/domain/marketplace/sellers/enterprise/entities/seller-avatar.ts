@@ -25,6 +25,10 @@ export class SellerAvatar extends Entity<SellerAvatarProps> {
     this.props.avatarId = value
   }
 
+  get createdAt() {
+    return this.props.createdAt
+  }
+
   static create(
     props: Optional<SellerAvatarProps, 'createdAt'>,
     id?: UniqueEntityId,

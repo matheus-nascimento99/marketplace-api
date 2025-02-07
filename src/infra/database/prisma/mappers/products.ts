@@ -6,6 +6,7 @@ import { Product } from '@/domain/marketplace/products/enterprise/entities/produ
 import { ProductImageWithDetails } from '@/domain/marketplace/products/enterprise/value-objects/product-image-with-details'
 import { ProductWithDetails } from '@/domain/marketplace/products/enterprise/value-objects/product-with-details'
 import { Slug } from '@/domain/marketplace/products/enterprise/value-objects/slug'
+import { SellerAvatarWithDetails } from '@/domain/marketplace/sellers/enterprise/value-objects/seller-avatar-with-details'
 import {
   Prisma,
   Product as PrismaProduct,
@@ -56,10 +57,13 @@ export class PrismaProductsMapper {
         email: raw.user.email,
         phone: Raw.create(raw.user.phone),
         avatar: raw.user.avatar
-          ? Attachment.create(
-              { key: raw.user.avatar.key },
-              new UniqueEntityId(raw.user.avatar.id),
-            )
+          ? SellerAvatarWithDetails.create({
+              avatar: Attachment.create(
+                { key: raw.user.avatar.key },
+                new UniqueEntityId(raw.user.avatar.id),
+              ),
+              createdAt: raw.user.createdAt,
+            })
           : null,
       },
       createdAt: raw.createdAt,

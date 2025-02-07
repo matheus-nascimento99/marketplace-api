@@ -1,9 +1,9 @@
 import { SellersAvatarsRepository } from '@/domain/marketplace/sellers/application/repositories/sellers-avatars'
-import { SellerAvatar } from '@/domain/marketplace/sellers/enterprise/seller-avatar'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import { PrismaSellersAvatarsMapper } from '../mappers/sellers-avatars'
+import { SellerAvatar } from '@/domain/marketplace/sellers/enterprise/entities/seller-avatar'
 
 @Injectable()
 export class PrismaSellersAvatarsRepository

@@ -1,6 +1,5 @@
 import { Either, left, right } from '@/core/either'
 import { SellersRepository } from '../repositories/sellers'
-import { Seller } from '../../enterprise/seller'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
 import { HashCreator } from '@/core/hash/hash-creator'
 import { AttachmentsRepository } from '@/domain/marketplace/attachments/application/repositories/attachments'
@@ -8,9 +7,11 @@ import { Injectable } from '@nestjs/common'
 import { Raw } from '@/core/value-objects/raw'
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import { Attachment } from '@/domain/marketplace/attachments/enterprise/entities/attachment'
-import { SellerAvatar } from '../../enterprise/seller-avatar'
 import { SellerWithEmailAlreadyExists } from './errors/seller-with-email-already-exists'
 import { SellerWithPhoneAlreadyExists } from './errors/seller-with-phone-already-exists'
+import { Seller } from '../../enterprise/entities/seller'
+import { SellerAvatar } from '../../enterprise/entities/seller-avatar'
+import { SellerWithDetails } from '../../enterprise/value-objects/seller-with-details'
 
 export type CreateSellerUseCaseRequest = {
   name: string
@@ -25,8 +26,7 @@ export type CreateSellerUseCaseResponse = Either<
   | SellerWithEmailAlreadyExists
   | SellerWithPhoneAlreadyExists,
   {
-    seller: Seller
-    avatar: Attachment | null
+    seller: SellerWithDetails
   }
 >
 
@@ -90,11 +90,10 @@ export class CreateSellerUseCase {
       seller.avatar = sellerAvatar
     }
 
-    await this.sellersRepository.create(seller)
+    const sellerWithDetails = await this.sellersRepository.create(seller)
 
     return right({
-      seller,
-      avatar: avatarById,
+      seller: sellerWithDetails,
     })
   }
 }

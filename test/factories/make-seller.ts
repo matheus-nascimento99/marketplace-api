@@ -3,7 +3,7 @@ import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import {
   Seller,
   SellerProps,
-} from '@/domain/marketplace/sellers/enterprise/seller'
+} from '@/domain/marketplace/sellers/enterprise/entities/seller'
 import { PrismaSellersMapper } from '@/infra/database/prisma/mappers/sellers'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { DEFAULT_PASSWORD } from '@/utils/default-password'

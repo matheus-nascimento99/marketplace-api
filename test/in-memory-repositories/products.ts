@@ -9,6 +9,7 @@ import { InMemorySellersAvatarsRepository } from './sellers-avatars'
 import { Attachment } from '@/domain/marketplace/attachments/enterprise/entities/attachment'
 import { Category } from '@/domain/marketplace/products/enterprise/entities/category'
 import { ProductImageWithDetails } from '@/domain/marketplace/products/enterprise/value-objects/product-image-with-details'
+import { SellerAvatarWithDetails } from '@/domain/marketplace/sellers/enterprise/value-objects/seller-avatar-with-details'
 
 export class InMemoryProductsRepository implements ProductsRepository {
   constructor(
@@ -96,14 +97,16 @@ export class InMemoryProductsRepository implements ProductsRepository {
         email: seller.email,
         name: seller.name,
         phone: seller.phone,
-        avatar: sellerAttachment
-          ? Attachment.create(
-              {
-                key: sellerAttachment.key,
-              },
-              sellerAttachment.id,
-            )
-          : null,
+        avatar:
+          sellerAvatar && sellerAttachment
+            ? SellerAvatarWithDetails.create({
+                avatar: Attachment.create(
+                  { key: sellerAttachment.key },
+                  sellerAttachment.id,
+                ),
+                createdAt: sellerAvatar?.createdAt,
+              })
+            : null,
       },
       images: product.images.currentItems.map((productImage) => {
         const image = this.inMemoryAttachmentsRepository.items.find((item) =>

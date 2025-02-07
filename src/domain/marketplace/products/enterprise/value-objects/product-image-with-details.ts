@@ -8,11 +8,11 @@ export type ProductImageWithDetailsProps = {
 
 export class ProductImageWithDetails extends ValueObject<ProductImageWithDetailsProps> {
   get image() {
-    return this.image
+    return this.props.image
   }
 
   get createdAt() {
-    return this.createdAt
+    return this.props.createdAt
   }
 
   static create(props: ProductImageWithDetailsProps) {

@@ -20,10 +20,11 @@ let sut: CreateSellerUseCase
 describe('Create seller use case', () => {
   beforeEach(() => {
     inMemorySellersAvatarsRepository = new InMemorySellersAvatarsRepository()
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
     inMemorySellersRepository = new InMemorySellersRepository(
       inMemorySellersAvatarsRepository,
+      inMemoryAttachmentsRepository,
     )
-    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
     fakeHasher = new FakeHasher()
 
     sut = new CreateSellerUseCase(

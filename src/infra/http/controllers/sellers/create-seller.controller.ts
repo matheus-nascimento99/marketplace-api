@@ -239,7 +239,7 @@ export class CreateSellerController {
     }
 
     return {
-      seller: SellersPresenter.toHTTP(result.value.seller, result.value.avatar),
+      seller: SellersPresenter.toHTTP(result.value.seller),
     }
   }
 }

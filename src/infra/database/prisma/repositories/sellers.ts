@@ -1,11 +1,12 @@
 import { Raw } from '@/core/value-objects/raw'
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import { SellersRepository } from '@/domain/marketplace/sellers/application/repositories/sellers'
-import { Seller } from '@/domain/marketplace/sellers/enterprise/seller'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { PrismaSellersMapper } from '../mappers/sellers'
 import { PrismaSellersAvatarsRepository } from './sellers-avatars'
+import { Seller } from '@/domain/marketplace/sellers/enterprise/entities/seller'
+import { SellerWithDetails } from '@/domain/marketplace/sellers/enterprise/value-objects/seller-with-details'
 
 @Injectable()
 export class PrismaSellersRepository implements SellersRepository {
@@ -14,16 +15,26 @@ export class PrismaSellersRepository implements SellersRepository {
     private prismaSellersAvatarsRepository: PrismaSellersAvatarsRepository,
   ) {}
 
-  async create(seller: Seller): Promise<void> {
+  async create(seller: Seller): Promise<SellerWithDetails> {
     const data = PrismaSellersMapper.toPrisma(seller)
 
     await this.prisma.user.create({
       data,
     })
 
-    if (!seller.avatar) return
+    if (seller.avatar) {
+      await this.prismaSellersAvatarsRepository.create(seller.avatar)
+    }
 
-    await this.prismaSellersAvatarsRepository.create(seller.avatar)
+    const sellerWithDetails = await this.findByIdWithDetails(seller.id)
+
+    if (!sellerWithDetails) {
+      throw new BadRequestException(
+        'Vendedor com os detalhes não foi encontrado',
+      )
+    }
+
+    return sellerWithDetails
   }
 
   async findById(sellerId: UniqueEntityId): Promise<Seller | null> {
@@ -36,6 +47,21 @@ export class PrismaSellersRepository implements SellersRepository {
     }
 
     return PrismaSellersMapper.toDomain(seller)
+  }
+
+  async findByIdWithDetails(
+    sellerId: UniqueEntityId,
+  ): Promise<SellerWithDetails | null> {
+    const seller = await this.prisma.user.findUnique({
+      where: { id: sellerId.toString() },
+      include: { avatar: true },
+    })
+
+    if (!seller) {
+      return null
+    }
+
+    return PrismaSellersMapper.toDomainWithDetails(seller)
   }
 
   async findByEmail(sellerEmail: string): Promise<Seller | null> {
@@ -62,7 +88,10 @@ export class PrismaSellersRepository implements SellersRepository {
     return PrismaSellersMapper.toDomain(seller)
   }
 
-  async save(sellerId: UniqueEntityId, seller: Seller): Promise<void> {
+  async save(
+    sellerId: UniqueEntityId,
+    seller: Seller,
+  ): Promise<SellerWithDetails> {
     const data = PrismaSellersMapper.toPrisma(seller)
 
     await this.prisma.user.update({
@@ -70,8 +99,18 @@ export class PrismaSellersRepository implements SellersRepository {
       data,
     })
 
-    if (!seller.avatar) return
+    if (seller.avatar) {
+      await this.prismaSellersAvatarsRepository.create(seller.avatar)
+    }
 
-    await this.prismaSellersAvatarsRepository.create(seller.avatar)
+    const sellerWithDetails = await this.findByIdWithDetails(seller.id)
+
+    if (!sellerWithDetails) {
+      throw new BadRequestException(
+        'Vendedor com os detalhes não foi encontrado',
+      )
+    }
+
+    return sellerWithDetails
   }
 }

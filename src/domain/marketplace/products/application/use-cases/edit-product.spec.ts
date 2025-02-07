@@ -30,8 +30,14 @@ describe('Edit product use case', () => {
     inMemorySellersAvatarsRepository = new InMemorySellersAvatarsRepository()
     inMemorySellersRepository = new InMemorySellersRepository(
       inMemorySellersAvatarsRepository,
+      inMemoryAttachmentsRepository,
     )
-    inMemoryProductsRepository = new InMemoryProductsRepository()
+    inMemoryProductsRepository = new InMemoryProductsRepository(
+      inMemoryCategoriesRepository,
+      inMemorySellersRepository,
+      inMemorySellersAvatarsRepository,
+      inMemoryAttachmentsRepository,
+    )
 
     sut = new EditProductUseCase(
       inMemoryProductsRepository,
@@ -43,7 +49,16 @@ describe('Edit product use case', () => {
   })
 
   it('should be able to edit product', async () => {
-    const product = makeProduct({})
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
+    const category = makeCategory({})
+    inMemoryCategoriesRepository.items.push(category)
+
+    const product = makeProduct({
+      sellerId: seller.id,
+      categoryId: category.id,
+    })
     inMemoryProductsRepository.create(product)
 
     const firstAttachment = makeAttachment({})
@@ -60,17 +75,14 @@ describe('Edit product use case', () => {
     const thirdAttachment = makeAttachment({})
     inMemoryAttachmentsRepository.items.push(thirdAttachment)
 
-    const seller = makeSeller({})
-    inMemorySellersRepository.create(seller)
-
-    const category = makeCategory({})
-    inMemoryCategoriesRepository.items.push(category)
+    const newCategory = makeCategory({})
+    inMemoryCategoriesRepository.items.push(newCategory)
 
     const result = await sut.execute({
       productId: product.id.toString(),
       sellerId: seller.id.toString(),
       title: faker.lorem.sentence(),
-      categoryId: category.id.toString(),
+      categoryId: newCategory.id.toString(),
       description: faker.lorem.sentence(),
       priceInCents: faker.number.int(),
       attachmentsIds: [
@@ -95,7 +107,16 @@ describe('Edit product use case', () => {
   })
 
   it('should not be able to edit product by a non-existent seller', async () => {
-    const product = makeProduct({})
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
+    const category = makeCategory({})
+    inMemoryCategoriesRepository.items.push(category)
+
+    const product = makeProduct({
+      sellerId: seller.id,
+      categoryId: category.id,
+    })
     inMemoryProductsRepository.create(product)
 
     const result = await sut.execute({
@@ -113,11 +134,17 @@ describe('Edit product use case', () => {
   })
 
   it('should not be able to edit product with a non-existent category', async () => {
-    const product = makeProduct({})
-    inMemoryProductsRepository.create(product)
-
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
+
+    const category = makeCategory({})
+    inMemoryCategoriesRepository.items.push(category)
+
+    const product = makeProduct({
+      sellerId: seller.id,
+      categoryId: category.id,
+    })
+    inMemoryProductsRepository.create(product)
 
     const result = await sut.execute({
       productId: product.id.toString(),

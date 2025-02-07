@@ -20,10 +20,11 @@ let sut: EditSellerUseCase
 describe('Edit seller use case', () => {
   beforeEach(() => {
     inMemorySellersAvatarsRepository = new InMemorySellersAvatarsRepository()
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
     inMemorySellersRepository = new InMemorySellersRepository(
       inMemorySellersAvatarsRepository,
+      inMemoryAttachmentsRepository,
     )
-    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
     fakeStorage = new FakeStorage()
 
     sut = new EditSellerUseCase(

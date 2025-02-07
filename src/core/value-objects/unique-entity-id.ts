@@ -4,11 +4,11 @@ import { ValueObject } from './value-object'
 
 export class UniqueEntityId extends ValueObject<string> {
   toString() {
-    return this._value.toString()
+    return this.props.toString()
   }
 
   toValue() {
-    return this._value
+    return this.props
   }
 
   constructor(id?: string) {

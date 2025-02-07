@@ -1,6 +1,6 @@
 import { UniqueEntityId } from '@/core/value-objects/unique-entity-id'
 import { SellersAvatarsRepository } from '@/domain/marketplace/sellers/application/repositories/sellers-avatars'
-import { SellerAvatar } from '@/domain/marketplace/sellers/enterprise/seller-avatar'
+import { SellerAvatar } from '@/domain/marketplace/sellers/enterprise/entities/seller-avatar'
 
 export class InMemorySellersAvatarsRepository
   implements SellersAvatarsRepository

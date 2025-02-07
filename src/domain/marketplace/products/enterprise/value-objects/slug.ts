@@ -2,7 +2,7 @@ import { ValueObject } from '@/core/value-objects/value-object'
 
 export class Slug extends ValueObject<string> {
   get value() {
-    return this._value
+    return this.props
   }
 
   static create(text: string) {
