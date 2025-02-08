@@ -13,6 +13,7 @@ import { EditSellerController } from './controllers/sellers/edit-seller.controll
 import { EditSellerUseCase } from '@/domain/marketplace/sellers/application/use-cases/edit-seller'
 import { FetchCategoriesController } from './controllers/categories/fetch-categories.controller'
 import { FetchCategoriesUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-categories'
+import { SignOutSellerController } from './controllers/sessions/sign-out.controller'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -22,6 +23,7 @@ import { FetchCategoriesUseCase } from '@/domain/marketplace/products/applicatio
     AuthenticateSellerController,
     SaveAttachmentsController,
     FetchCategoriesController,
+    SignOutSellerController,
   ],
   providers: [
     CreateSellerUseCase,
