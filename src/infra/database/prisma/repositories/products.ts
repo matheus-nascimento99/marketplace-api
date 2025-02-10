@@ -91,6 +91,53 @@ export class PrismaProductsRepository implements ProductsRepository {
     }
   }
 
+  async findManyBySellerId(
+    sellerId: UniqueEntityId,
+    { page, limit }: PaginationParamsRequest,
+    { search, status }: FilterParams<FetchProductsFilterParams>,
+  ): Promise<PaginationParamsResponse<ProductWithDetails>> {
+    const where: Prisma.ProductWhereInput = {}
+
+    where.userId = { equals: sellerId.toString() }
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ]
+    }
+
+    if (status) {
+      where.status = { equals: status }
+    }
+
+    const [total, products] = await Promise.all([
+      this.prisma.product.count({ where }),
+      this.prisma.product.findMany({
+        where,
+        include: {
+          category: true,
+          user: { include: { avatar: true } },
+          attachments: true,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+    ])
+
+    const totalPages = Math.ceil(total / limit)
+
+    return {
+      items: products.map((product) =>
+        PrismaProductsMapper.toDomainWithDetails(product),
+      ),
+      total,
+      prev: page > 1 ? page - 1 : null,
+      next: page < totalPages ? page + 1 : null,
+    }
+  }
+
   async findById(productId: UniqueEntityId): Promise<Product | null> {
     const product = await this.prisma.product.findUnique({
       where: { id: productId.toString() },

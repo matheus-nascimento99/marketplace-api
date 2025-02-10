@@ -15,6 +15,12 @@ export abstract class ProductsRepository {
     filterParams: FilterParams<FetchProductsFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>>
 
+  abstract findManyBySellerId(
+    sellerId: UniqueEntityId,
+    paginationParams: PaginationParamsRequest,
+    filterParams: FilterParams<FetchProductsFilterParams>,
+  ): Promise<PaginationParamsResponse<ProductWithDetails>>
+
   abstract findById(productId: UniqueEntityId): Promise<Product | null>
   abstract findByIdWithDetails(
     productId: UniqueEntityId,

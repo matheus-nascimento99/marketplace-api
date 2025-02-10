@@ -91,6 +91,61 @@ export class InMemoryProductsRepository implements ProductsRepository {
     }
   }
 
+  async findManyBySellerId(
+    sellerId: UniqueEntityId,
+    { page, limit }: PaginationParamsRequest,
+    { search, status }: FilterParams<FetchProductsFilterParams>,
+  ): Promise<PaginationParamsResponse<ProductWithDetails>> {
+    let products: ProductWithDetails[] = []
+
+    for (const item of this.items) {
+      const productWithDetails = await this.findByIdWithDetails(item.id)
+
+      if (productWithDetails) {
+        products.push(productWithDetails)
+      }
+    }
+
+    products
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .filter((item) => item.seller.sellerId.equals(sellerId))
+
+    if (search) {
+      products = products.filter(
+        (product) =>
+          product.title.toLowerCase().includes(search) ||
+          product.description.toLowerCase().includes(search),
+      )
+    }
+
+    if (status) {
+      products = products.filter((product) => product.status === status)
+    }
+
+    const total = products.length
+
+    products = products.slice((page - 1) * limit, page * limit)
+
+    const pages = Math.ceil(total / limit)
+
+    const next =
+      Math.ceil(((page + 1) * limit) / limit) <= pages
+        ? Math.ceil(((page + 1) * page) / page)
+        : null
+
+    const prev =
+      Math.ceil((page * page) / page) - 1 === 0
+        ? null
+        : Math.ceil((page * page) / page) - 1
+
+    return {
+      items: products,
+      next,
+      prev,
+      total,
+    }
+  }
+
   async findById(productId: UniqueEntityId): Promise<Product | null> {
     const product = this.items.find((item) => item.id.equals(productId))
 

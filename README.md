@@ -28,10 +28,10 @@
   [X] - Deve ser possível realizar paginação pela lista de produtos
   [X] - Deve ser possível filtrar pelo Status
   [X] - Deve ser possível buscar pelo título ou pela descrição do produto
-[ ] - Deve ser possível listar todos os produtos de um usuário
-  [ ] - Não deve ser possível listar os produtos de um usuário inexistente
-  [ ] - Deve ser possível filtrar pelo Status
-  [ ] - Deve ser possível buscar pelo título ou pela descrição do produto
+[X] - Deve ser possível listar todos os produtos de um usuário
+  [X] - Não deve ser possível listar os produtos de um usuário inexistente
+  [X] - Deve ser possível filtrar pelo Status
+  [X] - Deve ser possível buscar pelo título ou pela descrição do produto
 [ ] - Deve ser possível alterar o Status do Produto
   [ ] - Não deve ser possível alterar o Status de um Produto com um usuário inexistente
   [ ] - Não deve ser possível alterar o Status de um Produto inexistente
