@@ -29,7 +29,7 @@ export class GetProductController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Product successfully geted',
+    description: 'Product successfully found',
     schema: {
       properties: {
         product: {

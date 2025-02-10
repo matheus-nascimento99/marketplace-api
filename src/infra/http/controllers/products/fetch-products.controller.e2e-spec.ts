@@ -78,6 +78,7 @@ describe('Fetch products (e2e)', () => {
       expect.objectContaining({ id: thirdProduct.id.toString() }),
     ])
   })
+
   test('/products (GET) [PAGINATED]', async () => {
     const seller = await sellerFactory.makePrismaSeller({})
 
@@ -91,6 +92,7 @@ describe('Fetch products (e2e)', () => {
 
     expect(result.body.products).toHaveLength(1)
   })
+
   test('/products (GET) [FILTERED BY SEARCH]', async () => {
     const seller = await sellerFactory.makePrismaSeller({})
 
@@ -112,6 +114,7 @@ describe('Fetch products (e2e)', () => {
 
     expect(secondResult.body.products).toHaveLength(2)
   })
+
   test('/products (GET) [FILTERED BY STATUS]', async () => {
     const seller = await sellerFactory.makePrismaSeller({})
 

@@ -85,6 +85,7 @@ describe('Fetch products (e2e)', () => {
       expect.objectContaining({ id: thirdProduct.id.toString() }),
     ])
   })
+
   test('/products/me (GET) [PAGINATED]', async () => {
     const accessToken = await jwt.signAsync({ sub: seller.id.toString() })
 
@@ -96,6 +97,7 @@ describe('Fetch products (e2e)', () => {
 
     expect(result.body.products).toHaveLength(1)
   })
+
   test('/products/me (GET) [FILTERED BY SEARCH]', async () => {
     const accessToken = await jwt.signAsync({ sub: seller.id.toString() })
 
@@ -115,6 +117,7 @@ describe('Fetch products (e2e)', () => {
 
     expect(secondResult.body.products).toHaveLength(2)
   })
+
   test('/products/me (GET) [FILTERED BY STATUS]', async () => {
     const accessToken = await jwt.signAsync({ sub: seller.id.toString() })
 

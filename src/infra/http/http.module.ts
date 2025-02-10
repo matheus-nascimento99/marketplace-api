@@ -24,11 +24,14 @@ import { FetchProductsController } from './controllers/products/fetch-products.c
 import { FetchProductsUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-products'
 import { FetchProductsFromSellerController } from './controllers/products/fetch-products-from-seller.controller'
 import { FetchProductsFromSellerUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-products-from-seller'
+import { GetSellerController } from './controllers/sellers/get-seller.controller'
+import { GetSellerUseCase } from '@/domain/marketplace/sellers/application/use-cases/get-seller'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
   controllers: [
     FetchProductsFromSellerController,
+    GetSellerController,
     CreateSellerController,
     EditSellerController,
     AuthenticateSellerController,
@@ -50,9 +53,10 @@ import { FetchProductsFromSellerUseCase } from '@/domain/marketplace/products/ap
     CreateProductUseCase,
     EditProductUseCase,
     GetProductUseCase,
-    FetchProductsFromSellerUseCase,
     FetchProductsUseCase,
     FetchCategoriesUseCase,
+    FetchProductsFromSellerUseCase,
+    GetSellerUseCase,
   ],
 })
 export class HttpModule {}

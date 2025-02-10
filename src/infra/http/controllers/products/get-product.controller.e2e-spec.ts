@@ -44,7 +44,7 @@ describe('Get product (e2e)', () => {
     await app.init()
   })
 
-  test('/products/:product_id (PUT)', async () => {
+  test('/products/:product_id (GET)', async () => {
     const seller = await sellerFactory.makePrismaSeller({})
 
     const accessToken = await jwt.signAsync({ sub: seller.id.toString() })
