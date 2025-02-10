@@ -14,6 +14,10 @@ import { EditSellerUseCase } from '@/domain/marketplace/sellers/application/use-
 import { FetchCategoriesController } from './controllers/categories/fetch-categories.controller'
 import { FetchCategoriesUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-categories'
 import { SignOutSellerController } from './controllers/sessions/sign-out.controller'
+import { CreateProductController } from './controllers/products/create-product.controller'
+import { CreateProductUseCase } from '@/domain/marketplace/products/application/use-cases/create-product'
+import { EditProductController } from './controllers/products/edit-product.controller'
+import { EditProductUseCase } from '@/domain/marketplace/products/application/use-cases/edit-product'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -24,6 +28,8 @@ import { SignOutSellerController } from './controllers/sessions/sign-out.control
     SaveAttachmentsController,
     FetchCategoriesController,
     SignOutSellerController,
+    CreateProductController,
+    EditProductController,
   ],
   providers: [
     CreateSellerUseCase,
@@ -31,6 +37,8 @@ import { SignOutSellerController } from './controllers/sessions/sign-out.control
     AuthenticateSellerUseCase,
     SaveAttachmentsUseCase,
     FetchCategoriesUseCase,
+    CreateProductUseCase,
+    EditProductUseCase,
   ],
 })
 export class HttpModule {}

@@ -8,11 +8,16 @@ import { PrismaSellersAvatarsRepository } from './prisma/repositories/sellers-av
 import { SellersAvatarsRepository } from '@/domain/marketplace/sellers/application/repositories/sellers-avatars'
 import { CategoriesRepository } from '@/domain/marketplace/products/application/repositories/categories'
 import { PrismaCategoriesRepository } from './prisma/repositories/categories'
+import { ProductsRepository } from '@/domain/marketplace/products/application/repositories/products'
+import { PrismaProductsRepository } from './prisma/repositories/products'
+import { ProductsImagesRepository } from '@/domain/marketplace/products/application/repositories/products-images'
+import { PrismaProductsImagesRepository } from './prisma/repositories/products-images'
 
 @Module({
   providers: [
     PrismaService,
     PrismaSellersAvatarsRepository,
+    PrismaProductsImagesRepository,
     { provide: SellersRepository, useClass: PrismaSellersRepository },
     { provide: AttachmentsRepository, useClass: PrismaAttachmentsRepository },
     {
@@ -20,6 +25,11 @@ import { PrismaCategoriesRepository } from './prisma/repositories/categories'
       useClass: PrismaSellersAvatarsRepository,
     },
     { provide: CategoriesRepository, useClass: PrismaCategoriesRepository },
+    { provide: ProductsRepository, useClass: PrismaProductsRepository },
+    {
+      provide: ProductsImagesRepository,
+      useClass: PrismaProductsImagesRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -27,6 +37,8 @@ import { PrismaCategoriesRepository } from './prisma/repositories/categories'
     AttachmentsRepository,
     SellersAvatarsRepository,
     CategoriesRepository,
+    ProductsRepository,
+    ProductsImagesRepository,
   ],
 })
 export class DatabaseModule {}

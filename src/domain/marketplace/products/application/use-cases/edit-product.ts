@@ -10,6 +10,8 @@ import { ProductsImagesRepository } from '../repositories/products-images'
 import { ProductImageList } from '../../enterprise/watched-lists/product-image-list'
 import { ProductImage } from '../../enterprise/entities/product-image'
 import { ProductWithDetails } from '../../enterprise/value-objects/product-with-details'
+import { UpdateAnotherSellerProductError } from './errors/update-another-seller-product'
+import { UpdateSoldProductError } from './errors/update-sold-product'
 
 export type EditProductUseCaseRequest = {
   productId: string
@@ -22,7 +24,9 @@ export type EditProductUseCaseRequest = {
 }
 
 export type EditProductUseCaseResponse = Either<
-  ResourceNotFoundError,
+  | ResourceNotFoundError
+  | UpdateAnotherSellerProductError
+  | UpdateSoldProductError,
   {
     product: ProductWithDetails
   }
@@ -61,6 +65,14 @@ export class EditProductUseCase {
 
     if (!seller) {
       return left(new ResourceNotFoundError('Seller', 'ID', sellerId))
+    }
+
+    if (!product.sellerId.equals(seller.id)) {
+      return left(new UpdateAnotherSellerProductError())
+    }
+
+    if (product.status === 'sold') {
+      return left(new UpdateSoldProductError())
     }
 
     const category = await this.categoriesRepository.findById(

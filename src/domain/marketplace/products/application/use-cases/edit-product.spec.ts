@@ -12,6 +12,8 @@ import { InMemoryAttachmentsRepository } from 'test/in-memory-repositories/attac
 import { InMemoryProductsImagesRepository } from 'test/in-memory-repositories/products-images'
 import { makeAttachment } from 'test/factories/make-attachment'
 import { makeProductImage } from 'test/factories/make-product-image'
+import { UpdateAnotherSellerProductError } from './errors/update-another-seller-product'
+import { UpdateSoldProductError } from './errors/update-sold-product'
 
 let inMemoryProductsImagesRepository: InMemoryProductsImagesRepository
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository
@@ -158,5 +160,74 @@ describe('Edit product use case', () => {
 
     expect(result.isLeft()).toEqual(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+
+  it('should not be able to edit product that belogs to another seller', async () => {
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
+    const category = makeCategory({})
+    inMemoryCategoriesRepository.items.push(category)
+
+    const product = makeProduct({
+      sellerId: seller.id,
+      categoryId: category.id,
+    })
+
+    inMemoryProductsRepository.create(product)
+
+    const anotherSeller = makeSeller({})
+    inMemorySellersRepository.create(anotherSeller)
+
+    const anotherCategory = makeCategory({})
+    inMemoryCategoriesRepository.items.push(anotherCategory)
+
+    const anotherProduct = makeProduct({
+      sellerId: anotherSeller.id,
+      categoryId: anotherCategory.id,
+    })
+
+    inMemoryProductsRepository.create(anotherProduct)
+
+    const result = await sut.execute({
+      productId: anotherProduct.id.toString(),
+      sellerId: seller.id.toString(),
+      title: faker.lorem.sentence(),
+      categoryId: faker.string.uuid(),
+      description: faker.lorem.sentence(),
+      priceInCents: faker.number.int(),
+      attachmentsIds: [],
+    })
+
+    expect(result.isLeft()).toEqual(true)
+    expect(result.value).toBeInstanceOf(UpdateAnotherSellerProductError)
+  })
+
+  it('should not be able to edit sold product', async () => {
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
+    const category = makeCategory({})
+    inMemoryCategoriesRepository.items.push(category)
+
+    const product = makeProduct({
+      sellerId: seller.id,
+      categoryId: category.id,
+      status: 'sold',
+    })
+    inMemoryProductsRepository.create(product)
+
+    const result = await sut.execute({
+      productId: product.id.toString(),
+      sellerId: seller.id.toString(),
+      title: faker.lorem.sentence(),
+      categoryId: faker.string.uuid(),
+      description: faker.lorem.sentence(),
+      priceInCents: faker.number.int(),
+      attachmentsIds: [],
+    })
+
+    expect(result.isLeft()).toEqual(true)
+    expect(result.value).toBeInstanceOf(UpdateSoldProductError)
   })
 })

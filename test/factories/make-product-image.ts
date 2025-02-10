@@ -3,6 +3,8 @@ import {
   ProductImage,
   ProductImageProps,
 } from '@/domain/marketplace/products/enterprise/entities/product-image'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { Injectable } from '@nestjs/common'
 
 export const makeProductImage = (
   overrides: Partial<ProductImageProps>,
@@ -16,4 +18,24 @@ export const makeProductImage = (
     },
     id,
   )
+}
+
+@Injectable()
+export class ProductImageFactory {
+  constructor(private prisma: PrismaService) {}
+
+  async makePrismaProductImage(override: Partial<ProductImageProps> = {}) {
+    const product = makeProductImage({
+      ...override,
+    })
+
+    await this.prisma.attachment.update({
+      where: { id: product.imageId.toString() },
+      data: {
+        productId: product.productId.toString(),
+      },
+    })
+
+    return product
+  }
 }

@@ -9,6 +9,7 @@
   [X] - Não deve ser possível atualizar para um telefone duplicado
 [X] - Deve ser possível obter o token de autenticação
   [X] - Não deve ser possível se autenticar com credenciais incorretas
+[X] - Deve ser possível deslogar da aplicação
 [X] - Deve ser possível realizar o upload de arquivos
 [X] - Deve ser possível listar todas as categorias
   [X] - Qualquer usuário deve poder obter a lista de categorias
@@ -16,10 +17,10 @@
   [X] - Deve ser possível armazenar o valor do produto em centavos
   [X] - Não deve ser possível criar/editar um Produto com um usuário inexistente
   [X] - Não deve ser possível criar/editar um Produto com uma categoria inexistente
-  [ ] - Não deve ser possível criar/editar um Produto com imagens inexistentes
+  [X] - Não deve ser possível criar/editar um Produto com imagens inexistentes
   [X] - Não deve ser possível editar um Produto inexistente
-  [ ] - Não deve ser possível alterar um Produto de outro usuário
-  [ ] - Não deve ser possível editar um Produto já vendido
+  [X] - Não deve ser possível alterar um Produto de outro usuário
+  [X] - Não deve ser possível editar um Produto já vendido
 [ ] - Deve ser possível obter dados de um Produto
   [ ] - Qualquer usuário deve poder obter dados do Produto
 [ ] - Deve ser possível listar todos os produtos por ordem de criação (mais recente)

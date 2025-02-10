@@ -7,6 +7,10 @@ export class InMemoryProductsImagesRepository
 {
   public items: ProductImage[] = []
 
+  async createMany(productImages: ProductImage[]): Promise<void> {
+    this.items.push(...productImages)
+  }
+
   async findManyByProductId(
     productId: UniqueEntityId,
   ): Promise<ProductImage[]> {
@@ -15,5 +19,16 @@ export class InMemoryProductsImagesRepository
     )
 
     return productImages
+  }
+
+  async deleteMany(productImagesIds: UniqueEntityId[]): Promise<void> {
+    const productImagesFiltered = this.items.filter(
+      (item) =>
+        !productImagesIds.some((productImagesId) =>
+          productImagesId.equals(item.id),
+        ),
+    )
+
+    this.items = productImagesFiltered
   }
 }
