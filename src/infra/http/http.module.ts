@@ -26,6 +26,8 @@ import { FetchProductsFromSellerController } from './controllers/products/fetch-
 import { FetchProductsFromSellerUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-products-from-seller'
 import { GetSellerController } from './controllers/sellers/get-seller.controller'
 import { GetSellerUseCase } from '@/domain/marketplace/sellers/application/use-cases/get-seller'
+import { ChangeProductStatusController } from './controllers/products/change-product-status.controller'
+import { ChangeProductStatusUseCase } from '@/domain/marketplace/products/application/use-cases/change-product-status'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -43,6 +45,7 @@ import { GetSellerUseCase } from '@/domain/marketplace/sellers/application/use-c
     GetProductController,
     FetchProductsController,
     FetchCategoriesController,
+    ChangeProductStatusController,
   ],
   providers: [
     CreateSellerUseCase,
@@ -57,6 +60,7 @@ import { GetSellerUseCase } from '@/domain/marketplace/sellers/application/use-c
     FetchCategoriesUseCase,
     FetchProductsFromSellerUseCase,
     GetSellerUseCase,
+    ChangeProductStatusUseCase,
   ],
 })
 export class HttpModule {}

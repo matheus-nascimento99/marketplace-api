@@ -27,7 +27,6 @@ describe('Edit product (e2e)', () => {
       imports: [AppModule, DatabaseModule],
       providers: [
         ProductFactory,
-        AttachmentFactory,
         SellerFactory,
         ProductImageFactory,
         AttachmentFactory,
