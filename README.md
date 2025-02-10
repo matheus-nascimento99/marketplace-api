@@ -21,8 +21,8 @@
   [X] - Não deve ser possível editar um Produto inexistente
   [X] - Não deve ser possível alterar um Produto de outro usuário
   [X] - Não deve ser possível editar um Produto já vendido
-[ ] - Deve ser possível obter dados de um Produto
-  [ ] - Qualquer usuário deve poder obter dados do Produto
+[X] - Deve ser possível obter dados de um Produto
+  [X] - Qualquer usuário deve poder obter dados do Produto
 [ ] - Deve ser possível listar todos os produtos por ordem de criação (mais recente)
   [ ] - Qualquer usuário deve poder obter a lista de produtos
   [ ] - Deve ser possível realizar paginação pela lista de produtos

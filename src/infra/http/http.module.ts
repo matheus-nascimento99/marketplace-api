@@ -18,6 +18,8 @@ import { CreateProductController } from './controllers/products/create-product.c
 import { CreateProductUseCase } from '@/domain/marketplace/products/application/use-cases/create-product'
 import { EditProductController } from './controllers/products/edit-product.controller'
 import { EditProductUseCase } from '@/domain/marketplace/products/application/use-cases/edit-product'
+import { GetProductController } from './controllers/products/get-product.controller'
+import { GetProductUseCase } from '@/domain/marketplace/products/application/use-cases/get-product'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -30,6 +32,7 @@ import { EditProductUseCase } from '@/domain/marketplace/products/application/us
     SignOutSellerController,
     CreateProductController,
     EditProductController,
+    GetProductController,
   ],
   providers: [
     CreateSellerUseCase,
@@ -39,6 +42,7 @@ import { EditProductUseCase } from '@/domain/marketplace/products/application/us
     FetchCategoriesUseCase,
     CreateProductUseCase,
     EditProductUseCase,
+    GetProductUseCase,
   ],
 })
 export class HttpModule {}
