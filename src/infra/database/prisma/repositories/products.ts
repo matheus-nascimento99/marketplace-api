@@ -6,6 +6,13 @@ import { PrismaService } from '../prisma.service'
 import { PrismaProductsMapper } from '../mappers/products'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaProductsImagesRepository } from './products-images'
+import { FilterParams } from '@/core/@types/filter-params'
+import {
+  PaginationParamsRequest,
+  PaginationParamsResponse,
+} from '@/core/@types/pagination-params'
+import { FetchProductsFilterParams } from '@/domain/marketplace/products/application/use-cases/fetch-products'
+import { Prisma } from '@prisma/client'
 
 @Injectable()
 export class PrismaProductsRepository implements ProductsRepository {
@@ -38,6 +45,50 @@ export class PrismaProductsRepository implements ProductsRepository {
     }
 
     return productWithDetails
+  }
+
+  async findMany(
+    { page, limit }: PaginationParamsRequest,
+    { search, status }: FilterParams<FetchProductsFilterParams>,
+  ): Promise<PaginationParamsResponse<ProductWithDetails>> {
+    const where: Prisma.ProductWhereInput = {}
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ]
+    }
+
+    if (status) {
+      where.status = { equals: status }
+    }
+
+    const [total, products] = await Promise.all([
+      this.prisma.product.count({ where }),
+      this.prisma.product.findMany({
+        where,
+        include: {
+          category: true,
+          user: { include: { avatar: true } },
+          attachments: true,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+    ])
+
+    const totalPages = Math.ceil(total / limit)
+
+    return {
+      items: products.map((product) =>
+        PrismaProductsMapper.toDomainWithDetails(product),
+      ),
+      total,
+      prev: page > 1 ? page - 1 : null,
+      next: page < totalPages ? page + 1 : null,
+    }
   }
 
   async findById(productId: UniqueEntityId): Promise<Product | null> {

@@ -10,6 +10,12 @@ import { Attachment } from '@/domain/marketplace/attachments/enterprise/entities
 import { Category } from '@/domain/marketplace/products/enterprise/entities/category'
 import { ProductImageWithDetails } from '@/domain/marketplace/products/enterprise/value-objects/product-image-with-details'
 import { SellerAvatarWithDetails } from '@/domain/marketplace/sellers/enterprise/value-objects/seller-avatar-with-details'
+import {
+  PaginationParamsRequest,
+  PaginationParamsResponse,
+} from '@/core/@types/pagination-params'
+import { FilterParams } from '@/core/@types/filter-params'
+import { FetchProductsFilterParams } from '@/domain/marketplace/products/application/use-cases/fetch-products'
 
 export class InMemoryProductsRepository implements ProductsRepository {
   constructor(
@@ -31,6 +37,58 @@ export class InMemoryProductsRepository implements ProductsRepository {
     }
 
     return productWithDetails
+  }
+
+  async findMany(
+    { page, limit }: PaginationParamsRequest,
+    { search, status }: FilterParams<FetchProductsFilterParams>,
+  ): Promise<PaginationParamsResponse<ProductWithDetails>> {
+    let products: ProductWithDetails[] = []
+
+    for (const item of this.items) {
+      const productWithDetails = await this.findByIdWithDetails(item.id)
+
+      if (productWithDetails) {
+        products.push(productWithDetails)
+      }
+    }
+
+    products.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+
+    if (search) {
+      products = products.filter(
+        (product) =>
+          product.title.toLowerCase().includes(search) ||
+          product.description.toLowerCase().includes(search),
+      )
+    }
+
+    if (status) {
+      products = products.filter((product) => product.status === status)
+    }
+
+    const total = products.length
+
+    products = products.slice((page - 1) * limit, page * limit)
+
+    const pages = Math.ceil(total / limit)
+
+    const next =
+      Math.ceil(((page + 1) * limit) / limit) <= pages
+        ? Math.ceil(((page + 1) * page) / page)
+        : null
+
+    const prev =
+      Math.ceil((page * page) / page) - 1 === 0
+        ? null
+        : Math.ceil((page * page) / page) - 1
+
+    return {
+      items: products,
+      next,
+      prev,
+      total,
+    }
   }
 
   async findById(productId: UniqueEntityId): Promise<Product | null> {
