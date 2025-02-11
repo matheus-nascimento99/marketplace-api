@@ -1,35 +1,40 @@
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
-import { GetProductUseCase } from '@/domain/marketplace/products/application/use-cases/get-product'
+import { RegisterViewUseCase } from '@/domain/marketplace/products/application/use-cases/register-view'
 
 import {
   BadRequestException,
   Controller,
-  Get,
+  ForbiddenException,
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
   Param,
+  Post,
 } from '@nestjs/common'
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ProductsPresenter } from '../../presenters/products'
+import { ViewsPresenter } from '../../presenters/views'
+import { CurrentUser } from '@/auth/current-user'
+import { UserPayload } from '@/auth/jwt.strategy'
+import { ViewOwnProductError } from '@/domain/marketplace/products/application/use-cases/errors/view-own-product'
+import { DuplicateViewError } from '@/domain/marketplace/products/application/use-cases/errors/duplicate-view'
 
-@ApiTags('Products')
-@Controller('/products/:product_id')
-export class GetProductController {
-  constructor(private getProductUseCase: GetProductUseCase) {}
+@ApiTags('Views')
+@Controller('/products/:product_id/views')
+export class RegisterViewController {
+  constructor(private registerViewUseCase: RegisterViewUseCase) {}
 
-  @Get()
+  @Post()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get product' })
+  @ApiOperation({ summary: 'Register view' })
   @ApiParam({
     name: 'product_id',
     required: true,
-    description: 'ID of the product to get',
+    description: 'ID of the product to register view',
     schema: { type: 'string' },
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Product successfully found',
+    description: 'View successfully registered',
     schema: {
       properties: {
         product: {
@@ -142,20 +147,70 @@ export class GetProductController {
             },
           },
         },
+        viewer: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: "Viewer's unique identifier",
+              example: '123e4567-e89b-12d3-a456-426614174000',
+            },
+            name: {
+              type: 'string',
+              description: "Viewer's full name",
+              example: 'John Smith',
+            },
+            phone: {
+              type: 'string',
+              description: "Viewer's phone number",
+              example: '11999999999',
+            },
+            email: {
+              type: 'string',
+              description: "Viewer's email address",
+              example: 'john.smith@example.com',
+            },
+            avatar: {
+              type: 'object',
+              nullable: true,
+              properties: {
+                id: {
+                  type: 'string',
+                  description: "Avatar's unique identifier",
+                  example: '123e4567-e89b-12d3-a456-426614174000',
+                },
+                url: {
+                  type: 'string',
+                  description: "Avatar's URL",
+                  example:
+                    'https://example.com/attachments/avatars/123e4567-e89b-12d3-a456-426614174000',
+                },
+              },
+            },
+          },
+        },
       },
     },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'Invalid input data, or product not found',
+    description: 'Invalid input data, product, or viewer not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'View in own product, or duplicate view',
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Internal error',
   })
-  async handle(@Param('product_id') productId: string) {
-    const result = await this.getProductUseCase.execute({
+  async handle(
+    @CurrentUser() user: UserPayload,
+    @Param('product_id') productId: string,
+  ) {
+    const result = await this.registerViewUseCase.execute({
       productId,
+      viewerId: user.sub,
     })
 
     if (result.isLeft()) {
@@ -164,15 +219,16 @@ export class GetProductController {
       switch (error.constructor) {
         case ResourceNotFoundError:
           throw new BadRequestException(error.message)
+        case ViewOwnProductError:
+        case DuplicateViewError:
+          throw new ForbiddenException(error.message)
         default:
           throw new InternalServerErrorException(
-            'Erro ao selecionar produto, tente novamente mais tarde!',
+            'Erro ao registerar visualização ao produto, tente novamente mais tarde!',
           )
       }
     }
 
-    return {
-      product: ProductsPresenter.toHTTP(result.value.product),
-    }
+    return ViewsPresenter.toHTTP(result.value.view)
   }
 }

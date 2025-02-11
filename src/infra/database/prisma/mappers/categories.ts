@@ -9,6 +9,7 @@ export class PrismaCategoriesMapper {
       {
         title: raw.title,
         slug: Slug.create(raw.slug),
+        createdAt: raw.createdAt,
       },
       new UniqueEntityId(raw.id),
     )
@@ -19,6 +20,7 @@ export class PrismaCategoriesMapper {
       id: category.id.toString(),
       title: category.title,
       slug: category.slug.value,
+      createdAt: category.createdAt,
     }
   }
 }

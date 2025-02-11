@@ -183,22 +183,22 @@ export class EditProductController {
               properties: {
                 id: {
                   type: 'string',
-                  description: 'Seller ID',
+                  description: 'Owner ID',
                   example: '123e4567-e89b-12d3-a456-426614174001',
                 },
                 name: {
                   type: 'string',
-                  description: 'Seller name',
+                  description: 'Owner name',
                   example: 'John Doe',
                 },
                 phone: {
                   type: 'string',
-                  description: 'Seller phone number',
+                  description: 'Owner phone number',
                   example: '+5511999999999',
                 },
                 email: {
                   type: 'string',
-                  description: 'Seller email',
+                  description: 'Owner email',
                   example: 'john.doe@example.com',
                 },
                 avatar: {

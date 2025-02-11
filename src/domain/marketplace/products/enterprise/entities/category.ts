@@ -6,6 +6,7 @@ import { Optional } from '@/core/@types/optional'
 export type CategoryProps = {
   title: string
   slug: Slug
+  createdAt: Date
 }
 
 export class Category extends Entity<CategoryProps> {
@@ -21,9 +22,20 @@ export class Category extends Entity<CategoryProps> {
     return this.props.slug
   }
 
-  static create(props: Optional<CategoryProps, 'slug'>, id?: UniqueEntityId) {
+  get createdAt() {
+    return this.props.createdAt
+  }
+
+  static create(
+    props: Optional<CategoryProps, 'slug' | 'createdAt'>,
+    id?: UniqueEntityId,
+  ) {
     return new Category(
-      { ...props, slug: props.slug ?? Slug.createFromText(props.title) },
+      {
+        ...props,
+        slug: props.slug ?? Slug.createFromText(props.title),
+        createdAt: props.createdAt ?? new Date(),
+      },
       id,
     )
   }
