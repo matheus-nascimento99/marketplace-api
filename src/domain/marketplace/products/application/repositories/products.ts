@@ -10,6 +10,7 @@ import { FetchProductsFilterParams } from '../use-cases/fetch-products'
 
 export abstract class ProductsRepository {
   abstract create(product: Product): Promise<ProductWithDetails>
+
   abstract findMany(
     paginationParams: PaginationParamsRequest,
     filterParams: FilterParams<FetchProductsFilterParams>,
@@ -22,9 +23,16 @@ export abstract class ProductsRepository {
   ): Promise<PaginationParamsResponse<ProductWithDetails>>
 
   abstract findById(productId: UniqueEntityId): Promise<Product | null>
+
   abstract findByIdWithDetails(
     productId: UniqueEntityId,
   ): Promise<ProductWithDetails | null>
+
+  abstract countSoldBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number>
+
+  abstract countAvailableBySellerIdInMonth(
+    sellerId: UniqueEntityId,
+  ): Promise<number>
 
   abstract save(
     productId: UniqueEntityId,

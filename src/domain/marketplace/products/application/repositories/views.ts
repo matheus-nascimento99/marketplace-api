@@ -13,4 +13,12 @@ export abstract class ViewsRepository {
     viewerId: UniqueEntityId,
     productId: UniqueEntityId,
   ): Promise<View | null>
+
+  abstract countBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number>
+
+  abstract countByProductIdInWeek(productId: UniqueEntityId): Promise<number>
+
+  abstract countBySellerIdPerDayInMonth(
+    sellerId: UniqueEntityId,
+  ): Promise<{ date: Date; amount: number }[]>
 }

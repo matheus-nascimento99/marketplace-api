@@ -21,6 +21,10 @@ export class PrismaProductsRepository implements ProductsRepository {
     private prismaProductsImagesRepository: PrismaProductsImagesRepository,
   ) {}
 
+  countSoldBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number> {
+    throw new Error('Method not implemented.')
+  }
+
   async create(product: Product): Promise<ProductWithDetails> {
     const data = PrismaProductsMapper.toPrisma(product)
 

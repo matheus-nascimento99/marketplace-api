@@ -16,6 +16,7 @@ import {
 } from '@/core/@types/pagination-params'
 import { FilterParams } from '@/core/@types/filter-params'
 import { FetchProductsFilterParams } from '@/domain/marketplace/products/application/use-cases/fetch-products'
+import { isBefore, startOfDay, subDays } from 'date-fns'
 
 export class InMemoryProductsRepository implements ProductsRepository {
   constructor(
@@ -236,6 +237,40 @@ export class InMemoryProductsRepository implements ProductsRepository {
         })
       }),
     })
+  }
+
+  async countSoldBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number> {
+    const now = new Date()
+    const monthAgo = startOfDay(subDays(now, 30))
+
+    const products = this.items.filter(
+      (item) =>
+        item.sellerId.equals(sellerId) &&
+        item.status === 'sold' &&
+        !isBefore(item.createdAt, monthAgo),
+    )
+
+    const count = products.length
+
+    return count
+  }
+
+  async countAvailableBySellerIdInMonth(
+    sellerId: UniqueEntityId,
+  ): Promise<number> {
+    const now = new Date()
+    const monthAgo = startOfDay(subDays(now, 30))
+
+    const products = this.items.filter(
+      (item) =>
+        item.sellerId.equals(sellerId) &&
+        item.status === 'available' &&
+        !isBefore(item.createdAt, monthAgo),
+    )
+
+    const count = products.length
+
+    return count
   }
 
   async save(
