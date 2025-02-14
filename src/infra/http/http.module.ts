@@ -34,6 +34,8 @@ import { GetSoldProductsAmountInMonthController } from './controllers/metrics/ge
 import { GetSoldProductsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-sold-products-amount-in-month'
 import { GetAvailableProductsAmountInMonthController } from './controllers/metrics/get-available-products-amount-in-month.controller'
 import { GetAvailableProductsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-available-products-amount-in-month'
+import { GetViewsAmountInMonthController } from './controllers/metrics/get-views-amount-in-month.controller'
+import { GetViewsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-views-amount-in-month'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -55,6 +57,7 @@ import { GetAvailableProductsAmountInMonthUseCase } from '@/domain/marketplace/m
     RegisterViewController,
     GetSoldProductsAmountInMonthController,
     GetAvailableProductsAmountInMonthController,
+    GetViewsAmountInMonthController,
   ],
   providers: [
     CreateSellerUseCase,
@@ -73,6 +76,7 @@ import { GetAvailableProductsAmountInMonthUseCase } from '@/domain/marketplace/m
     RegisterViewUseCase,
     GetSoldProductsAmountInMonthUseCase,
     GetAvailableProductsAmountInMonthUseCase,
+    GetViewsAmountInMonthUseCase,
   ],
 })
 export class HttpModule {}

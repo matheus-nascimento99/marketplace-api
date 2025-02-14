@@ -1,7 +1,7 @@
 import { CurrentUser } from '@/auth/current-user'
 import { UserPayload } from '@/auth/jwt.strategy'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
-import { GetAvailableProductsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-available-products-amount-in-month'
+import { GetViewsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-views-amount-in-month'
 
 import {
   BadRequestException,
@@ -14,18 +14,18 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('Metrics')
-@Controller('/sellers/metrics/products/available')
-export class GetAvailableProductsAmountInMonthController {
+@Controller('/sellers/metrics/views')
+export class GetViewsAmountInMonthController {
   constructor(
-    private getAvailableProductsAmountInMonthUseCase: GetAvailableProductsAmountInMonthUseCase,
+    private getViewsAmountInMonthUseCase: GetViewsAmountInMonthUseCase,
   ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get available products amount in month' })
+  @ApiOperation({ summary: 'Get views amount in month' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Available products amount in month successfully found',
+    description: ' views amount in month successfully found',
     schema: {
       properties: {
         amount: {
@@ -44,7 +44,7 @@ export class GetAvailableProductsAmountInMonthController {
     description: 'Internal error',
   })
   async handle(@CurrentUser() user: UserPayload) {
-    const result = await this.getAvailableProductsAmountInMonthUseCase.execute({
+    const result = await this.getViewsAmountInMonthUseCase.execute({
       sellerId: user.sub,
     })
 
@@ -56,7 +56,7 @@ export class GetAvailableProductsAmountInMonthController {
           throw new BadRequestException(error.message)
         default:
           throw new InternalServerErrorException(
-            'Erro ao selecionar os produtos disponíveis no último mês, tente novamente mais tarde!',
+            'Erro ao selecionar as visualizações no último mês, tente novamente mais tarde!',
           )
       }
     }
