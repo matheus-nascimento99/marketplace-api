@@ -22,9 +22,9 @@ export class FetchCategoriesController {
       properties: {
         categories: {
           type: 'array',
+          description: 'Array of categories',
           items: {
             type: 'object',
-            description: 'Array of categories',
             properties: {
               id: {
                 type: 'string',
