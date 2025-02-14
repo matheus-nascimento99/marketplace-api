@@ -36,6 +36,8 @@ import { GetAvailableProductsAmountInMonthController } from './controllers/metri
 import { GetAvailableProductsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-available-products-amount-in-month'
 import { GetViewsAmountInMonthController } from './controllers/metrics/get-views-amount-in-month.controller'
 import { GetViewsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-views-amount-in-month'
+import { GetProductViewsAmountInWeekController } from './controllers/metrics/get-product-views-amount-in-week.controller'
+import { GetProductViewsAmountInWeekUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-product-views-amount-in-week'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -58,6 +60,7 @@ import { GetViewsAmountInMonthUseCase } from '@/domain/marketplace/metrics/appli
     GetSoldProductsAmountInMonthController,
     GetAvailableProductsAmountInMonthController,
     GetViewsAmountInMonthController,
+    GetProductViewsAmountInWeekController,
   ],
   providers: [
     CreateSellerUseCase,
@@ -77,6 +80,7 @@ import { GetViewsAmountInMonthUseCase } from '@/domain/marketplace/metrics/appli
     GetSoldProductsAmountInMonthUseCase,
     GetAvailableProductsAmountInMonthUseCase,
     GetViewsAmountInMonthUseCase,
+    GetProductViewsAmountInWeekUseCase,
   ],
 })
 export class HttpModule {}

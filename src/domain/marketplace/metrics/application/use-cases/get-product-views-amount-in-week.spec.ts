@@ -63,7 +63,7 @@ describe('Get product views amount in week use case', () => {
 
     inMemoryProductsRepository.create(product)
 
-    Array.from({ length: 31 }).forEach((_, index) => {
+    Array.from({ length: 8 }).forEach((_, index) => {
       const now = new Date()
       const daysAmountToSub = index
       const createdAt = subDays(now, daysAmountToSub)
