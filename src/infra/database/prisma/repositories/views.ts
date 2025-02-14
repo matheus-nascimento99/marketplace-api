@@ -5,6 +5,7 @@ import { ViewWithDetails } from '@/domain/marketplace/products/enterprise/value-
 import { PrismaService } from '../prisma.service'
 import { PrismaViewsMapper } from '../mappers/views'
 import { BadRequestException, Injectable } from '@nestjs/common'
+import { startOfDay, subDays } from 'date-fns'
 
 @Injectable()
 export class PrismaViewsRepository implements ViewsRepository {
@@ -78,5 +79,80 @@ export class PrismaViewsRepository implements ViewsRepository {
     }
 
     return PrismaViewsMapper.toDomain(view)
+  }
+
+  async countBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number> {
+    const now = new Date()
+    const monthAgo = startOfDay(subDays(now, 30))
+
+    const countViews = await this.prisma.view.count({
+      where: {
+        product: {
+          userId: sellerId.toString(),
+        },
+        createdAt: { not: { lt: monthAgo } },
+      },
+    })
+
+    return countViews
+  }
+
+  async countByProductIdInWeek(productId: UniqueEntityId): Promise<number> {
+    const now = new Date()
+    const weekAgo = startOfDay(subDays(now, 7))
+
+    const countViews = await this.prisma.view.count({
+      where: {
+        productId: productId.toString(),
+        createdAt: { not: { lt: weekAgo } },
+      },
+    })
+
+    return countViews
+  }
+
+  async countBySellerIdPerDayInMonth(
+    sellerId: UniqueEntityId,
+  ): Promise<{ date: Date; amount: number }[]> {
+    const now = new Date()
+    const monthAgo = startOfDay(subDays(now, 30))
+
+    // Busca todas as visualizações do vendedor no último mês
+    const views = await this.prisma.view.groupBy({
+      by: ['createdAt'],
+      where: {
+        product: {
+          user: {
+            id: sellerId.toString(),
+          },
+        },
+        createdAt: {
+          gte: monthAgo,
+          lte: now,
+        },
+      },
+      _count: {
+        id: true,
+      },
+    })
+
+    // Cria um array com todos os dias do último mês
+    const viewsPerDay: { date: Date; amount: number }[] = Array.from({
+      length: 31,
+    }).map((_, index) => {
+      const date = startOfDay(subDays(now, index))
+
+      // Encontra a contagem para este dia específico
+      const dayCount = views.find(
+        (view) => startOfDay(view.createdAt).getTime() === date.getTime(),
+      )
+
+      return {
+        date,
+        amount: dayCount?._count?.id ?? 0,
+      }
+    })
+
+    return viewsPerDay
   }
 }

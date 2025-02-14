@@ -30,6 +30,10 @@ import { ChangeProductStatusController } from './controllers/products/change-pro
 import { ChangeProductStatusUseCase } from '@/domain/marketplace/products/application/use-cases/change-product-status'
 import { RegisterViewController } from './controllers/products/register-view.controller'
 import { RegisterViewUseCase } from '@/domain/marketplace/products/application/use-cases/register-view'
+import { GetSoldProductsAmountInMonthController } from './controllers/metrics/get-sold-products-amount-in-month.controller'
+import { GetSoldProductsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-sold-products-amount-in-month'
+import { GetAvailableProductsAmountInMonthController } from './controllers/metrics/get-available-products-amount-in-month.controller'
+import { GetAvailableProductsAmountInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-available-products-amount-in-month'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
@@ -49,6 +53,8 @@ import { RegisterViewUseCase } from '@/domain/marketplace/products/application/u
     FetchCategoriesController,
     ChangeProductStatusController,
     RegisterViewController,
+    GetSoldProductsAmountInMonthController,
+    GetAvailableProductsAmountInMonthController,
   ],
   providers: [
     CreateSellerUseCase,
@@ -65,6 +71,8 @@ import { RegisterViewUseCase } from '@/domain/marketplace/products/application/u
     GetSellerUseCase,
     ChangeProductStatusUseCase,
     RegisterViewUseCase,
+    GetSoldProductsAmountInMonthUseCase,
+    GetAvailableProductsAmountInMonthUseCase,
   ],
 })
 export class HttpModule {}

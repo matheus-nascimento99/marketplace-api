@@ -13,6 +13,7 @@ import {
 } from '@/core/@types/pagination-params'
 import { FetchProductsFilterParams } from '@/domain/marketplace/products/application/use-cases/fetch-products'
 import { Prisma } from '@prisma/client'
+import { startOfDay, subDays } from 'date-fns'
 
 @Injectable()
 export class PrismaProductsRepository implements ProductsRepository {
@@ -20,10 +21,6 @@ export class PrismaProductsRepository implements ProductsRepository {
     private prisma: PrismaService,
     private prismaProductsImagesRepository: PrismaProductsImagesRepository,
   ) {}
-
-  countSoldBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number> {
-    throw new Error('Method not implemented.')
-  }
 
   async create(product: Product): Promise<ProductWithDetails> {
     const data = PrismaProductsMapper.toPrisma(product)
@@ -208,5 +205,37 @@ export class PrismaProductsRepository implements ProductsRepository {
     }
 
     return productWithDetails
+  }
+
+  async countAvailableBySellerIdInMonth(
+    sellerId: UniqueEntityId,
+  ): Promise<number> {
+    const now = new Date()
+    const monthAgo = startOfDay(subDays(now, 30))
+
+    const countProducts = await this.prisma.product.count({
+      where: {
+        status: 'available',
+        userId: sellerId.toString(),
+        createdAt: { not: { lt: monthAgo } },
+      },
+    })
+
+    return countProducts
+  }
+
+  async countSoldBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number> {
+    const now = new Date()
+    const monthAgo = startOfDay(subDays(now, 30))
+
+    const countProducts = await this.prisma.product.count({
+      where: {
+        status: 'sold',
+        userId: sellerId.toString(),
+        createdAt: { not: { lt: monthAgo } },
+      },
+    })
+
+    return countProducts
   }
 }
