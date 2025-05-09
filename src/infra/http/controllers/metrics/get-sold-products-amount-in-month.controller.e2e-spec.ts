@@ -71,7 +71,7 @@ describe('Get sold products amount in month (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .get(`/sellers/metrics/products/sold`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 

@@ -53,7 +53,7 @@ describe('Change product status (e2e)', () => {
 
     await request(app.getHttpServer())
       .patch(`/products/${product.id.toString()}/cancelled`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 

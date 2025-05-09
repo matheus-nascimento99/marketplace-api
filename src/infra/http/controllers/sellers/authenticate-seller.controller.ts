@@ -34,7 +34,7 @@ const authenticateSellerSchema = z.object({
 
 type AuthenticateSellerSchema = z.infer<typeof authenticateSellerSchema>
 
-@ApiTags('Sellers')
+@ApiTags('Sessions')
 @Controller('/sellers/sessions')
 export class AuthenticateSellerController {
   constructor(private authenticateSellerUseCase: AuthenticateSellerUseCase) {}
@@ -115,12 +115,16 @@ export class AuthenticateSellerController {
       }
     }
 
-    response.cookie('access_token', result.value.accessToken, {
+    response.cookie('auth', result.value.accessToken, {
       httpOnly: true, // Previne acesso via JavaScript no cliente
       secure: process.env.NODE_ENV === 'production', // true em produção, false em desenvolvimento
       sameSite: 'strict', // Protege contra ataques CSRF
       maxAge: 24 * 60 * 60 * 1000, // Duração em millisegundos (exemplo: 24 horas)
       path: '/', // Caminho onde o cookie está disponível
     })
+
+    return {
+      accessToken: result.value.accessToken,
+    }
   }
 }

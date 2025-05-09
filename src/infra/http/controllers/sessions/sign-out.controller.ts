@@ -1,8 +1,14 @@
 import { Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 import { Response } from 'express'
 
 @ApiTags('Sessions')
+@ApiSecurity('auth')
 @Controller('/sign-out')
 export class SignOutSellerController {
   @Post()
@@ -17,6 +23,6 @@ export class SignOutSellerController {
     description: 'Internal error',
   })
   async handle(@Res({ passthrough: true }) response: Response) {
-    response.clearCookie('access_token', { path: '/' }) // Caminho onde o cookie está disponível
+    response.clearCookie('auth', { path: '/' }) // Caminho onde o cookie está disponível
   }
 }

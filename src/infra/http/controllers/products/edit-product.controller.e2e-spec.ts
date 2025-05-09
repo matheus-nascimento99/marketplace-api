@@ -87,7 +87,7 @@ describe('Edit product (e2e)', () => {
 
     await request(app.getHttpServer())
       .put(`/products/${product.id.toString()}`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({
         title: 'Test title',
         categoryId: anotherCategory.id.toString(),

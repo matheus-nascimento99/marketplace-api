@@ -7,8 +7,8 @@ import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { SellerFactory } from 'test/factories/make-seller'
 import { AttachmentFactory } from 'test/factories/make-attachment'
-import path from 'node:path'
-import fs from 'fs/promises'
+import * as path from 'path'
+import * as fs from 'fs/promises'
 import { JwtService } from '@nestjs/jwt'
 
 describe('Edit seller (e2e)', () => {
@@ -61,7 +61,7 @@ describe('Edit seller (e2e)', () => {
 
     await request(app.getHttpServer())
       .put(`/sellers`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({
         name: 'John Smith',
         email: 'john.smith@example.com',
@@ -92,7 +92,7 @@ describe('Edit seller (e2e)', () => {
 
     await request(app.getHttpServer())
       .put(`/sellers`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({
         name: 'John Smith',
         email: 'john.smith@example.com',
@@ -113,7 +113,7 @@ describe('Edit seller (e2e)', () => {
 
     await request(app.getHttpServer())
       .put(`/sellers`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({
         name: 'John Smith',
         email: 'john.smith@example.com',

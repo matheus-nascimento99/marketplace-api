@@ -10,9 +10,16 @@ import {
   InternalServerErrorException,
   Param,
 } from '@nestjs/common'
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 
 @ApiTags('Metrics')
+@ApiSecurity('auth')
 @Controller('/products/:product_id/metrics/views')
 export class GetProductViewsAmountInWeekController {
   constructor(

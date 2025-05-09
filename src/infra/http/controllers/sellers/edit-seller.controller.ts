@@ -16,7 +16,13 @@ import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation'
 import { harden } from '@/utils/harden'
 import { capitalize } from '@/utils/capitalize'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 import { SellersPresenter } from '../../presenters/sellers'
 import { CurrentUser } from '@/auth/current-user'
 import { UserPayload } from '@/auth/jwt.strategy'
@@ -62,6 +68,7 @@ const editSellerSchema = z.object({
 type EditSellerSchema = z.infer<typeof editSellerSchema>
 
 @ApiTags('Sellers')
+@ApiSecurity('auth')
 @Controller('/sellers')
 export class EditSellerController {
   constructor(private editSellerUseCase: EditSellerUseCase) {}

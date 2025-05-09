@@ -76,7 +76,7 @@ describe('Fetch products (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .get(`/products/me`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
 
     expect(result.body.products).toEqual([
@@ -91,7 +91,7 @@ describe('Fetch products (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .get(`/products/me?page=2&limit=2`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 
@@ -103,7 +103,7 @@ describe('Fetch products (e2e)', () => {
 
     const firstResult = await request(app.getHttpServer())
       .get(`/products/me?search=Title`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 
@@ -111,7 +111,7 @@ describe('Fetch products (e2e)', () => {
 
     const secondResult = await request(app.getHttpServer())
       .get(`/products/me?search=Description`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 
@@ -123,7 +123,7 @@ describe('Fetch products (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .get(`/products/me?status=cancelled`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 

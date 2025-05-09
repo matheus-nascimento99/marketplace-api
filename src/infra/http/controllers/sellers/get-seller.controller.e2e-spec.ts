@@ -34,7 +34,7 @@ describe('Get seller (e2e)', () => {
 
     await request(app.getHttpServer())
       .get(`/sellers/me`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
   })

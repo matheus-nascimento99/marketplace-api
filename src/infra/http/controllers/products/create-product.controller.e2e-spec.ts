@@ -51,7 +51,7 @@ describe('Create product (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .post('/products')
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({
         title: faker.lorem.sentence(),
         categoryId: category.id.toString(),

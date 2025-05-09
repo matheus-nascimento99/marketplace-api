@@ -43,7 +43,7 @@ describe('Fetch categories (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .get('/categories')
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .expect(200)
 
     expect(result.body.categories).toHaveLength(3)

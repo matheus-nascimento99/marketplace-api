@@ -57,7 +57,7 @@ describe('Register view (e2e)', () => {
 
     await request(app.getHttpServer())
       .post(`/products/${product.id.toString()}/views`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 

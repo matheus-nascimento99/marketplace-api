@@ -80,7 +80,7 @@ describe('Get views amount in month (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .get(`/sellers/metrics/views`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 

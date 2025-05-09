@@ -10,7 +10,13 @@ import {
   Param,
   Patch,
 } from '@nestjs/common'
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 
 import { CurrentUser } from '@/auth/current-user'
 import { UserPayload } from '@/auth/jwt.strategy'
@@ -22,6 +28,7 @@ import { SellCancelledProductError } from '@/domain/marketplace/products/applica
 import { ProductsPresenter } from '../../presenters/products'
 
 @ApiTags('Products')
+@ApiSecurity('auth')
 @Controller('/products/:product_id/:status')
 export class ChangeProductStatusController {
   constructor(private changeProductStatusUseCase: ChangeProductStatusUseCase) {}

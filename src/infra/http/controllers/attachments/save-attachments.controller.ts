@@ -99,7 +99,7 @@ export class SaveAttachmentsController {
           throw new BadRequestException(error.message)
         default:
           throw new InternalServerErrorException(
-            'Erro ao cadastrar vendedor, tente novamente mais tarde!',
+            'Erro ao cadastrar imagens, tente novamente mais tarde!',
           )
       }
     }

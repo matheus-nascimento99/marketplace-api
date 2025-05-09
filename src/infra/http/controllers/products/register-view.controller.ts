@@ -11,7 +11,13 @@ import {
   Param,
   Post,
 } from '@nestjs/common'
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 import { ViewsPresenter } from '../../presenters/views'
 import { CurrentUser } from '@/auth/current-user'
 import { UserPayload } from '@/auth/jwt.strategy'
@@ -19,6 +25,7 @@ import { ViewOwnProductError } from '@/domain/marketplace/products/application/u
 import { DuplicateViewError } from '@/domain/marketplace/products/application/use-cases/errors/duplicate-view'
 
 @ApiTags('Views')
+@ApiSecurity('auth')
 @Controller('/products/:product_id/views')
 export class RegisterViewController {
   constructor(private registerViewUseCase: RegisterViewUseCase) {}

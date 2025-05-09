@@ -10,10 +10,17 @@ import {
   InternalServerErrorException,
   Param,
 } from '@nestjs/common'
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 import { ProductsPresenter } from '../../presenters/products'
 
 @ApiTags('Products')
+@ApiSecurity('auth')
 @Controller('/products/:product_id')
 export class GetProductController {
   constructor(private getProductUseCase: GetProductUseCase) {}

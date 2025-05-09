@@ -36,7 +36,7 @@ describe('Authenticate seller (e2e)', () => {
 
     expect(result.headers).toEqual(
       expect.objectContaining({
-        'set-cookie': [expect.stringContaining('access_token=')],
+        'set-cookie': [expect.stringContaining('auth=')],
       }),
     )
   })

@@ -12,7 +12,13 @@ import {
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation'
 import { capitalize } from '@/utils/capitalize'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 import { ProductsPresenter } from '../../presenters/products'
 import { CurrentUser } from '@/auth/current-user'
 import { UserPayload } from '@/auth/jwt.strategy'
@@ -56,6 +62,7 @@ const createProductSchema = z.object({
 type CreateProductSchema = z.infer<typeof createProductSchema>
 
 @ApiTags('Products')
+@ApiSecurity('auth')
 @Controller('/products')
 export class CreateProductController {
   constructor(private createProductUseCase: CreateProductUseCase) {}

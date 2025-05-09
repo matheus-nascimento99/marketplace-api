@@ -35,10 +35,10 @@ describe('Sign out (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .post(`/sign-out`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 
-    expect(result.headers['set-cookie'][0]).toMatch(/access_token=;/)
+    expect(result.headers['set-cookie'][0]).toMatch(/auth=;/)
   })
 })

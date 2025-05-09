@@ -11,9 +11,15 @@ import {
   HttpStatus,
   InternalServerErrorException,
 } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 
 @ApiTags('Metrics')
+@ApiSecurity('auth')
 @Controller('/sellers/metrics/views/days')
 export class FetchViewsAmountPerDayInMonthController {
   constructor(

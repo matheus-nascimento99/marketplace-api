@@ -5,10 +5,10 @@ import {
   Query,
 } from '@nestjs/common'
 import {
-  ApiBearerAuth,
   ApiOperation,
   ApiQuery,
   ApiResponse,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger'
 import { z } from 'zod'
@@ -35,8 +35,8 @@ export const fetchProductsQuerySchema = z.object({
 export type FetchProductsQueryParams = z.infer<typeof fetchProductsQuerySchema>
 
 @ApiTags('Products')
+@ApiSecurity('auth')
 @Controller('/products')
-@ApiBearerAuth()
 export class FetchProductsController {
   constructor(private fetchProductsUseCase: FetchProductsUseCase) {}
 

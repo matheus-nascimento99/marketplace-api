@@ -4,12 +4,18 @@ import {
   HttpStatus,
   InternalServerErrorException,
 } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 import { FetchCategoriesUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-categories'
 import { CategoriesPresenter } from '../../presenters/categories'
 
 @ApiTags('Categories')
 @Controller('/categories')
+@ApiSecurity('auth')
 export class FetchCategoriesController {
   constructor(private fetchCategoriesUseCase: FetchCategoriesUseCase) {}
 

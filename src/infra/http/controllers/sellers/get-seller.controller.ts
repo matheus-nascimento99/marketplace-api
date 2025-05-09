@@ -9,12 +9,18 @@ import {
   HttpStatus,
   InternalServerErrorException,
 } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger'
 import { SellersPresenter } from '../../presenters/sellers'
 import { CurrentUser } from '@/auth/current-user'
 import { UserPayload } from '@/auth/jwt.strategy'
 
 @ApiTags('Sellers')
+@ApiSecurity('auth')
 @Controller('/sellers/me')
 export class GetSellerController {
   constructor(private getSellerUseCase: GetSellerUseCase) {}

@@ -58,7 +58,7 @@ describe('Get product (e2e)', () => {
 
     await request(app.getHttpServer())
       .get(`/products/${product.id.toString()}`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
   })

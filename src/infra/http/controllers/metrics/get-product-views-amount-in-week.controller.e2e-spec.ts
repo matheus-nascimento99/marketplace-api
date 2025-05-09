@@ -80,7 +80,7 @@ describe('Get product views amount in week (e2e)', () => {
 
     const result = await request(app.getHttpServer())
       .get(`/products/${product.id.toString()}/metrics/views`)
-      .set('Cookie', [`access_token=${accessToken}`])
+      .set('Cookie', [`auth=${accessToken}`])
       .send({})
       .expect(200)
 

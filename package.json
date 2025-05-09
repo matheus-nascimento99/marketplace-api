@@ -6,7 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prebuild": "mkdir -p dist && cp -R tmp dist/tmp || true",
     "build": "nest build",
+    "copy-tmp": "cp -R tmp dist/tmp",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

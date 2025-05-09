@@ -19,6 +19,7 @@ import {
   ApiOperation,
   ApiParam,
   ApiResponse,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger'
 import { ProductsPresenter } from '../../presenters/products'
@@ -67,6 +68,7 @@ const editProductSchema = z.object({
 type EditProductSchema = z.infer<typeof editProductSchema>
 
 @ApiTags('Products')
+@ApiSecurity('auth')
 @Controller('/products/:product_id')
 export class EditProductController {
   constructor(private editProductUseCase: EditProductUseCase) {}

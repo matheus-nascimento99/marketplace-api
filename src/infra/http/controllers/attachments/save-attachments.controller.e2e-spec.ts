@@ -6,8 +6,8 @@ import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { AttachmentFactory } from 'test/factories/make-attachment'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import fs from 'node:fs/promises'
-import path from 'node:path'
+import * as fs from 'fs/promises'
+import * as path from 'path'
 
 describe('Save attachments (e2e)', () => {
   let app: INestApplication
