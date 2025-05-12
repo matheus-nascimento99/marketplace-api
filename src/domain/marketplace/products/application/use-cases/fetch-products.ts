@@ -12,6 +12,9 @@ import { ProductStatus } from '../../enterprise/entities/product'
 export type FetchProductsFilterParams = {
   search: string
   status: ProductStatus
+  initialPrice: number
+  finalPrice: number
+  categoryId: string
 }
 
 type FetchProductsUseCaseRequest = {

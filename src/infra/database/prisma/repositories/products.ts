@@ -50,7 +50,13 @@ export class PrismaProductsRepository implements ProductsRepository {
 
   async findMany(
     { page, limit }: PaginationParamsRequest,
-    { search, status }: FilterParams<FetchProductsFilterParams>,
+    {
+      search,
+      status,
+      categoryId,
+      initialPrice,
+      finalPrice,
+    }: FilterParams<FetchProductsFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>> {
     const where: Prisma.ProductWhereInput = {}
 
@@ -63,6 +69,16 @@ export class PrismaProductsRepository implements ProductsRepository {
 
     if (status) {
       where.status = { equals: status }
+    }
+
+    if (categoryId) {
+      where.categoryId = { equals: categoryId }
+    }
+
+    if (initialPrice && finalPrice) {
+      where.priceInCents = { gte: initialPrice, lte: finalPrice }
+    } else if (finalPrice) {
+      where.priceInCents = { lte: finalPrice }
     }
 
     const [total, products] = await Promise.all([
@@ -95,7 +111,13 @@ export class PrismaProductsRepository implements ProductsRepository {
   async findManyBySellerId(
     sellerId: UniqueEntityId,
     { page, limit }: PaginationParamsRequest,
-    { search, status }: FilterParams<FetchProductsFilterParams>,
+    {
+      search,
+      status,
+      categoryId,
+      initialPrice,
+      finalPrice,
+    }: FilterParams<FetchProductsFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>> {
     const where: Prisma.ProductWhereInput = {}
 
@@ -110,6 +132,16 @@ export class PrismaProductsRepository implements ProductsRepository {
 
     if (status) {
       where.status = { equals: status }
+    }
+
+    if (categoryId) {
+      where.categoryId = { equals: categoryId }
+    }
+
+    if (initialPrice && finalPrice) {
+      where.priceInCents = { gte: initialPrice, lte: finalPrice }
+    } else if (finalPrice) {
+      where.priceInCents = { lte: finalPrice }
     }
 
     const [total, products] = await Promise.all([

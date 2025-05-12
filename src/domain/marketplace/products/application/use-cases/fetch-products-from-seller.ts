@@ -15,6 +15,9 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
 export type FetchProductsFromSellerFilterParams = {
   search: string
   status: ProductStatus
+  initialPrice: number
+  finalPrice: number
+  categoryId: string
 }
 
 type FetchProductsFromSellerUseCaseRequest = {

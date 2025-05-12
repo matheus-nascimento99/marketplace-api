@@ -43,7 +43,7 @@ const createProductSchema = z.object({
         'Por favor, forneça a descrição do produto no formato correto(string)',
     })
     .min(1, 'Por favor, forneça a descrição do produto'),
-  priceInCents: z.number({
+  priceInCents: z.coerce.number({
     invalid_type_error:
       'Por favor, forneça o valor do produto no formato correto(number)',
   }),

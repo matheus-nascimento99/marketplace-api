@@ -185,6 +185,92 @@ describe('Fetch products use case', () => {
     expect(result.value?.items).toHaveLength(2)
   })
 
+  it('should be able to fetch products filtering by price', async () => {
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
+    const category = makeCategory({})
+    inMemoryCategoriesRepository.items.push(category)
+
+    inMemoryProductsRepository.items.push(
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: category.id,
+        priceInCents: 1000,
+      }),
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: category.id,
+        priceInCents: 2000,
+      }),
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: category.id,
+        priceInCents: 3000,
+      }),
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: category.id,
+        priceInCents: 4000,
+      }),
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: category.id,
+        priceInCents: 5000,
+      }),
+    )
+
+    const firstResult = await sut.execute({
+      filterParams: { initialPrice: 2000, finalPrice: 4000 },
+      paginationParams: { page: 1, limit: 3 },
+    })
+
+    expect(firstResult.isRight()).toEqual(true)
+    expect(firstResult.value?.items).toHaveLength(3)
+
+    const secondResult = await sut.execute({
+      filterParams: { finalPrice: 3000 },
+      paginationParams: { page: 1, limit: 3 },
+    })
+
+    expect(secondResult.isRight()).toEqual(true)
+    expect(secondResult.value?.items).toHaveLength(3)
+  })
+
+  it('should be able to fetch products filtering by category', async () => {
+    const seller = makeSeller({})
+    inMemorySellersRepository.create(seller)
+
+    const category = makeCategory({})
+    inMemoryCategoriesRepository.items.push(category)
+
+    const anotherCategory = makeCategory({})
+    inMemoryCategoriesRepository.items.push(anotherCategory)
+
+    inMemoryProductsRepository.items.push(
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: category.id,
+      }),
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: category.id,
+      }),
+      makeProduct({
+        sellerId: seller.id,
+        categoryId: anotherCategory.id,
+      }),
+    )
+
+    const result = await sut.execute({
+      filterParams: { categoryId: category.id.toString() },
+      paginationParams: { page: 1, limit: 3 },
+    })
+
+    expect(result.isRight()).toEqual(true)
+    expect(result.value?.items).toHaveLength(2)
+  })
+
   it('should be able to fetch products paginated', async () => {
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)

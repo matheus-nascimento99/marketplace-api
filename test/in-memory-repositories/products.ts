@@ -42,7 +42,13 @@ export class InMemoryProductsRepository implements ProductsRepository {
 
   async findMany(
     { page, limit }: PaginationParamsRequest,
-    { search, status }: FilterParams<FetchProductsFilterParams>,
+    {
+      search,
+      status,
+      categoryId,
+      initialPrice,
+      finalPrice,
+    }: FilterParams<FetchProductsFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>> {
     let products: ProductWithDetails[] = []
 
@@ -66,6 +72,24 @@ export class InMemoryProductsRepository implements ProductsRepository {
 
     if (status) {
       products = products.filter((product) => product.status === status)
+    }
+
+    if (categoryId) {
+      products = products.filter((product) =>
+        product.category.id.equals(new UniqueEntityId(categoryId)),
+      )
+    }
+
+    if (initialPrice && finalPrice) {
+      products = products.filter(
+        (product) =>
+          product.priceInCents >= initialPrice &&
+          product.priceInCents <= finalPrice,
+      )
+    } else if (finalPrice) {
+      products = products.filter(
+        (product) => product.priceInCents <= finalPrice,
+      )
     }
 
     const total = products.length
@@ -95,7 +119,13 @@ export class InMemoryProductsRepository implements ProductsRepository {
   async findManyBySellerId(
     sellerId: UniqueEntityId,
     { page, limit }: PaginationParamsRequest,
-    { search, status }: FilterParams<FetchProductsFilterParams>,
+    {
+      search,
+      status,
+      categoryId,
+      finalPrice,
+      initialPrice,
+    }: FilterParams<FetchProductsFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>> {
     let products: ProductWithDetails[] = []
 
@@ -107,9 +137,9 @@ export class InMemoryProductsRepository implements ProductsRepository {
       }
     }
 
-    products
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    products = products
       .filter((item) => item.seller.sellerId.equals(sellerId))
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
     if (search) {
       products = products.filter(
@@ -121,6 +151,24 @@ export class InMemoryProductsRepository implements ProductsRepository {
 
     if (status) {
       products = products.filter((product) => product.status === status)
+    }
+
+    if (categoryId) {
+      products = products.filter((product) =>
+        product.category.id.equals(new UniqueEntityId(categoryId)),
+      )
+    }
+
+    if (initialPrice && finalPrice) {
+      products = products.filter(
+        (product) =>
+          product.priceInCents >= initialPrice &&
+          product.priceInCents <= finalPrice,
+      )
+    } else if (finalPrice) {
+      products = products.filter(
+        (product) => product.priceInCents <= finalPrice,
+      )
     }
 
     const total = products.length

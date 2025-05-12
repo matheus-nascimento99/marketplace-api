@@ -17,20 +17,50 @@ import { FetchProductsUseCase } from '@/domain/marketplace/products/application/
 import { ZodValidationPipe } from '../../pipes/zod-validation'
 import { ProductsPresenter } from '../../presenters/products'
 
-export const fetchProductsQuerySchema = z.object({
-  limit: z.coerce.number().default(25),
-  page: z.coerce.number().default(1),
+export const fetchProductsQuerySchema = z
+  .object({
+    limit: z.coerce.number().default(25),
+    page: z.coerce.number().default(1),
 
-  search: z
-    .string({
-      invalid_type_error:
-        'Por favor, forneça o conteúdo da busca dos produtos no formato correto(string)',
-    })
-    .min(1, 'Por favor, forneça o conteúdo da busca dos produtos')
-    .transform((value) => value.trim().toLowerCase())
-    .optional(),
-  status: z.enum(['available', 'cancelled', 'sold']).optional(),
-})
+    search: z
+      .string({
+        invalid_type_error:
+          'Por favor, forneça o conteúdo da busca dos produtos no formato correto(string)',
+      })
+      .min(1, 'Por favor, forneça o conteúdo da busca dos produtos')
+      .transform((value) => value.trim().toLowerCase())
+      .optional(),
+    status: z.enum(['available', 'cancelled', 'sold']).optional(),
+    initial_price: z.coerce
+      .number({
+        invalid_type_error:
+          'Por favor, forneça o preço inicial do produto no formato correto(number)',
+      })
+      .optional(),
+    final_price: z.coerce
+      .number({
+        invalid_type_error:
+          'Por favor, forneça o preço final do produto no formato correto(number)',
+      })
+      .optional(),
+    category_id: z
+      .string({
+        invalid_type_error:
+          'Por favor, forneça uma categoria no formato correto(string - UUID)',
+      })
+      .uuid('Por favor, forneça uma categoria válida')
+      .optional(),
+  })
+  .refine(
+    (data) =>
+      (!data.initial_price && !data.final_price) ||
+      (data.initial_price && data.final_price) ||
+      data.final_price,
+    {
+      message: 'Por favor, informe o preço final',
+      path: ['final_price'],
+    },
+  )
 
 export type FetchProductsQueryParams = z.infer<typeof fetchProductsQuerySchema>
 
@@ -68,6 +98,24 @@ export class FetchProductsController {
     required: false,
     type: 'string',
     description: 'Status to filter products (available, cancelled, or sold)',
+  })
+  @ApiQuery({
+    name: 'initial_price',
+    required: false,
+    type: 'string',
+    description: 'Initial price to filter products',
+  })
+  @ApiQuery({
+    name: 'final_price',
+    required: false,
+    type: 'string',
+    description: 'Final price to filter products',
+  })
+  @ApiQuery({
+    name: 'category_id',
+    required: false,
+    type: 'string',
+    description: 'Category id to filter products',
   })
   @ApiResponse({
     status: 200,
@@ -222,6 +270,9 @@ export class FetchProductsController {
       filterParams: {
         search: query.search,
         status: query.status,
+        categoryId: query.category_id,
+        finalPrice: query.final_price,
+        initialPrice: query.initial_price,
       },
       paginationParams: { page: query.page, limit: query.limit },
     })

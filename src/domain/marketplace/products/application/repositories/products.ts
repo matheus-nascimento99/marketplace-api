@@ -7,6 +7,7 @@ import {
 } from '@/core/@types/pagination-params'
 import { FilterParams } from '@/core/@types/filter-params'
 import { FetchProductsFilterParams } from '../use-cases/fetch-products'
+import { FetchProductsFromSellerFilterParams } from '../use-cases/fetch-products-from-seller'
 
 export abstract class ProductsRepository {
   abstract create(product: Product): Promise<ProductWithDetails>
@@ -19,7 +20,7 @@ export abstract class ProductsRepository {
   abstract findManyBySellerId(
     sellerId: UniqueEntityId,
     paginationParams: PaginationParamsRequest,
-    filterParams: FilterParams<FetchProductsFilterParams>,
+    filterParams: FilterParams<FetchProductsFromSellerFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>>
 
   abstract findById(productId: UniqueEntityId): Promise<Product | null>
