@@ -115,7 +115,8 @@ export class FetchProductsFromSellerController {
     name: 'final_price',
     required: false,
     type: 'string',
-    description: 'Final price to filter products',
+    description:
+      'Final price to filter products (MANDATORY if initial_price provided)',
   })
   @ApiQuery({
     name: 'category_id',
