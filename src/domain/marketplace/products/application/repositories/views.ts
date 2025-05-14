@@ -12,7 +12,7 @@ export abstract class ViewsRepository {
   abstract findByViewerIdAndProductId(
     viewerId: UniqueEntityId,
     productId: UniqueEntityId,
-  ): Promise<View | null>
+  ): Promise<ViewWithDetails | null>
 
   abstract countBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number>
 

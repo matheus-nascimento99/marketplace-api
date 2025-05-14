@@ -11,8 +11,6 @@ import { makeProduct } from 'test/factories/make-product'
 import { faker } from '@faker-js/faker'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
 import { ViewOwnProductError } from './errors/view-own-product'
-import { makeView } from 'test/factories/make-view'
-import { DuplicateViewError } from './errors/duplicate-view'
 
 let inMemoryViewsRepository: InMemoryViewsRepository
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository
@@ -143,34 +141,5 @@ describe('Register view use case', () => {
 
     expect(result.isLeft()).toEqual(true)
     expect(result.value).toBeInstanceOf(ViewOwnProductError)
-  })
-
-  it('should not be able to register a product view by same seller more than once', async () => {
-    const seller = makeSeller({})
-    inMemorySellersRepository.create(seller)
-
-    const category = makeCategory({})
-    inMemoryCategoriesRepository.items.push(category)
-
-    const product = makeProduct({
-      sellerId: seller.id,
-      categoryId: category.id,
-    })
-
-    inMemoryProductsRepository.create(product)
-
-    const anotherSeller = makeSeller({})
-    inMemorySellersRepository.create(anotherSeller)
-
-    const view = makeView({ productId: product.id, viewerId: anotherSeller.id })
-    inMemoryViewsRepository.create(view)
-
-    const result = await sut.execute({
-      productId: product.id.toString(),
-      viewerId: anotherSeller.id.toString(),
-    })
-
-    expect(result.isLeft()).toEqual(true)
-    expect(result.value).toBeInstanceOf(DuplicateViewError)
   })
 })

@@ -62,7 +62,7 @@ export class InMemoryViewsRepository implements ViewsRepository {
   async findByViewerIdAndProductId(
     viewerId: UniqueEntityId,
     productId: UniqueEntityId,
-  ): Promise<View | null> {
+  ): Promise<ViewWithDetails | null> {
     const view = this.items.find(
       (item) =>
         item.viewerId.equals(viewerId) && item.productId.equals(productId),
@@ -72,7 +72,13 @@ export class InMemoryViewsRepository implements ViewsRepository {
       return null
     }
 
-    return view
+    const viewWithDetails = await this.findByIdWithDetails(view.id)
+
+    if (!viewWithDetails) {
+      throw new Error('View with details not found')
+    }
+
+    return viewWithDetails
   }
 
   async countBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number> {

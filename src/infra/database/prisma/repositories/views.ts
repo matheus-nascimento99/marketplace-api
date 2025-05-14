@@ -64,12 +64,30 @@ export class PrismaViewsRepository implements ViewsRepository {
   async findByViewerIdAndProductId(
     viewerId: UniqueEntityId,
     productId: UniqueEntityId,
-  ): Promise<View | null> {
+  ): Promise<ViewWithDetails | null> {
     const view = await this.prisma.view.findUnique({
       where: {
         userId_productId: {
           userId: viewerId.toString(),
           productId: productId.toString(),
+        },
+      },
+      include: {
+        product: {
+          include: {
+            category: true,
+            attachments: true,
+            user: {
+              include: {
+                avatar: true,
+              },
+            },
+          },
+        },
+        user: {
+          include: {
+            avatar: true,
+          },
         },
       },
     })
@@ -78,7 +96,7 @@ export class PrismaViewsRepository implements ViewsRepository {
       return null
     }
 
-    return PrismaViewsMapper.toDomain(view)
+    return PrismaViewsMapper.toDomainWithDetails(view)
   }
 
   async countBySellerIdInMonth(sellerId: UniqueEntityId): Promise<number> {

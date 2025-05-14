@@ -61,7 +61,9 @@ export class RegisterViewUseCase {
       )
 
     if (viewByViewerAndProduct) {
-      return left(new DuplicateViewError())
+      return right({
+        view: viewByViewerAndProduct,
+      })
     }
 
     const view = View.create({ productId: product.id, viewerId: viewer.id })

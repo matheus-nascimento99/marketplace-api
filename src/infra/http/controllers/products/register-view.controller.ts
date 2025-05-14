@@ -22,7 +22,6 @@ import { ViewsPresenter } from '../../presenters/views'
 import { CurrentUser } from '@/auth/current-user'
 import { UserPayload } from '@/auth/jwt.strategy'
 import { ViewOwnProductError } from '@/domain/marketplace/products/application/use-cases/errors/view-own-product'
-import { DuplicateViewError } from '@/domain/marketplace/products/application/use-cases/errors/duplicate-view'
 
 @ApiTags('Views')
 @ApiSecurity('auth')
@@ -205,7 +204,7 @@ export class RegisterViewController {
   })
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,
-    description: 'View in own product, or duplicate view',
+    description: 'View in own product',
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -227,7 +226,6 @@ export class RegisterViewController {
         case ResourceNotFoundError:
           throw new BadRequestException(error.message)
         case ViewOwnProductError:
-        case DuplicateViewError:
           throw new ForbiddenException(error.message)
         default:
           throw new InternalServerErrorException(
