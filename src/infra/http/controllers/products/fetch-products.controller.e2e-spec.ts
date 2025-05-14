@@ -41,6 +41,7 @@ describe('Fetch products (e2e)', () => {
 
   test('/products (GET)', async () => {
     const seller = await sellerFactory.makePrismaSeller({})
+    const anotherSeller = await sellerFactory.makePrismaSeller({})
 
     const accessToken = await jwt.signAsync({ sub: seller.id.toString() })
 
@@ -48,7 +49,7 @@ describe('Fetch products (e2e)', () => {
 
     const [firstProduct, secondProduct, thirdProduct] = await Promise.all([
       productFactory.makePrismaProduct({
-        sellerId: seller.id,
+        sellerId: anotherSeller.id,
         categoryId: category.id,
         title: 'Title test 1',
         description: 'Description test 1',
@@ -57,7 +58,7 @@ describe('Fetch products (e2e)', () => {
         createdAt: new Date(2025, 2, 10),
       }),
       productFactory.makePrismaProduct({
-        sellerId: seller.id,
+        sellerId: anotherSeller.id,
         categoryId: category.id,
         title: 'Title test 2',
         description: 'Description test 2',
@@ -66,7 +67,7 @@ describe('Fetch products (e2e)', () => {
         createdAt: new Date(2025, 2, 12),
       }),
       productFactory.makePrismaProduct({
-        sellerId: seller.id,
+        sellerId: anotherSeller.id,
         categoryId: anotherCategory.id,
         priceInCents: 3000,
         createdAt: new Date(2025, 2, 9),

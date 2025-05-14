@@ -36,6 +36,9 @@ describe('Fetch products use case', () => {
   })
 
   it('should be able to fetch products from more recent to older', async () => {
+    const currentSeller = makeSeller({})
+    inMemorySellersRepository.create(currentSeller)
+
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
@@ -61,6 +64,7 @@ describe('Fetch products use case', () => {
     )
 
     const result = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: {},
       paginationParams: { page: 1, limit: 3 },
     })
@@ -87,6 +91,9 @@ describe('Fetch products use case', () => {
   })
 
   it('should be able to fetch products filtering by title', async () => {
+    const currentSeller = makeSeller({})
+    inMemorySellersRepository.create(currentSeller)
+
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
@@ -111,6 +118,7 @@ describe('Fetch products use case', () => {
     )
 
     const result = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: { search: 'title' },
       paginationParams: { page: 1, limit: 3 },
     })
@@ -120,6 +128,9 @@ describe('Fetch products use case', () => {
   })
 
   it('should be able to fetch products filtering by description', async () => {
+    const currentSeller = makeSeller({})
+    inMemorySellersRepository.create(currentSeller)
+
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
@@ -144,6 +155,7 @@ describe('Fetch products use case', () => {
     )
 
     const result = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: { search: 'description' },
       paginationParams: { page: 1, limit: 3 },
     })
@@ -153,6 +165,9 @@ describe('Fetch products use case', () => {
   })
 
   it('should be able to fetch products filtering by status', async () => {
+    const currentSeller = makeSeller({})
+    inMemorySellersRepository.create(currentSeller)
+
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
@@ -177,6 +192,7 @@ describe('Fetch products use case', () => {
     )
 
     const result = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: { status: 'cancelled' },
       paginationParams: { page: 1, limit: 3 },
     })
@@ -186,6 +202,9 @@ describe('Fetch products use case', () => {
   })
 
   it('should be able to fetch products filtering by price', async () => {
+    const currentSeller = makeSeller({})
+    inMemorySellersRepository.create(currentSeller)
+
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
@@ -221,6 +240,7 @@ describe('Fetch products use case', () => {
     )
 
     const firstResult = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: { initialPrice: 2000, finalPrice: 4000 },
       paginationParams: { page: 1, limit: 3 },
     })
@@ -229,6 +249,7 @@ describe('Fetch products use case', () => {
     expect(firstResult.value?.items).toHaveLength(3)
 
     const secondResult = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: { finalPrice: 3000 },
       paginationParams: { page: 1, limit: 3 },
     })
@@ -238,6 +259,9 @@ describe('Fetch products use case', () => {
   })
 
   it('should be able to fetch products filtering by category', async () => {
+    const currentSeller = makeSeller({})
+    inMemorySellersRepository.create(currentSeller)
+
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
@@ -263,6 +287,7 @@ describe('Fetch products use case', () => {
     )
 
     const result = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: { categoryId: category.id.toString() },
       paginationParams: { page: 1, limit: 3 },
     })
@@ -272,6 +297,9 @@ describe('Fetch products use case', () => {
   })
 
   it('should be able to fetch products paginated', async () => {
+    const currentSeller = makeSeller({})
+    inMemorySellersRepository.create(currentSeller)
+
     const seller = makeSeller({})
     inMemorySellersRepository.create(seller)
 
@@ -294,6 +322,7 @@ describe('Fetch products use case', () => {
     )
 
     const result = await sut.execute({
+      userId: currentSeller.id.toString(),
       filterParams: {},
       paginationParams: { page: 2, limit: 2 },
     })

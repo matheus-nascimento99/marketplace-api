@@ -16,6 +16,8 @@ import { z } from 'zod'
 import { FetchProductsUseCase } from '@/domain/marketplace/products/application/use-cases/fetch-products'
 import { ZodValidationPipe } from '../../pipes/zod-validation'
 import { ProductsPresenter } from '../../presenters/products'
+import { CurrentUser } from '@/auth/current-user'
+import { UserPayload } from '@/auth/jwt.strategy'
 
 export const fetchProductsQuerySchema = z
   .object({
@@ -266,8 +268,10 @@ export class FetchProductsController {
   async handle(
     @Query(new ZodValidationPipe(fetchProductsQuerySchema))
     query: FetchProductsQueryParams,
+    @CurrentUser() { sub: userId }: UserPayload,
   ) {
     const result = await this.fetchProductsUseCase.execute({
+      userId,
       filterParams: {
         search: query.search,
         status: query.status,

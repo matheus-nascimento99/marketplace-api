@@ -49,6 +49,7 @@ export class PrismaProductsRepository implements ProductsRepository {
   }
 
   async findMany(
+    userId: UniqueEntityId,
     { page, limit }: PaginationParamsRequest,
     {
       search,
@@ -59,6 +60,8 @@ export class PrismaProductsRepository implements ProductsRepository {
     }: FilterParams<FetchProductsFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>> {
     const where: Prisma.ProductWhereInput = {}
+
+    where.userId = { not: { equals: userId.toString() } }
 
     if (search) {
       where.OR = [

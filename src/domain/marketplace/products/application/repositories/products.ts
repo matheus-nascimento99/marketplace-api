@@ -13,6 +13,7 @@ export abstract class ProductsRepository {
   abstract create(product: Product): Promise<ProductWithDetails>
 
   abstract findMany(
+    userId: UniqueEntityId,
     paginationParams: PaginationParamsRequest,
     filterParams: FilterParams<FetchProductsFilterParams>,
   ): Promise<PaginationParamsResponse<ProductWithDetails>>

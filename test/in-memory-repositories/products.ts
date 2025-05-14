@@ -41,6 +41,7 @@ export class InMemoryProductsRepository implements ProductsRepository {
   }
 
   async findMany(
+    userId: UniqueEntityId,
     { page, limit }: PaginationParamsRequest,
     {
       search,
@@ -60,7 +61,13 @@ export class InMemoryProductsRepository implements ProductsRepository {
       }
     }
 
-    products.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    products = products.sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    )
+
+    products = products.filter(
+      (product) => !product.seller.sellerId.equals(userId),
+    )
 
     if (search) {
       products = products.filter(
