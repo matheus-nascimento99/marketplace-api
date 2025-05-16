@@ -94,6 +94,7 @@ export class EditSellerController {
           email: 'john.smith@example.com',
           phone: '11999999999',
           avatarId: '123e4567-e89b-12d3-a456-426614174000',
+          password: '12345678',
         },
       },
     },
