@@ -63,6 +63,13 @@ const editSellerSchema = z.object({
     })
     .uuid('Por favor, forneça um avatar válido')
     .nullable(),
+  password: z
+    .string({
+      invalid_type_error:
+        'Por favor, forneça a nova senha no formato correto(string)',
+    })
+    .min(8, 'Por favor, forneça a nova senha de no mínimo 8 caracteres')
+    .nullish(),
 })
 
 type EditSellerSchema = z.infer<typeof editSellerSchema>
@@ -119,6 +126,13 @@ export class EditSellerController {
           format: 'uuid',
           nullable: true,
           example: '123e4567-e89b-12d3-a456-426614174000',
+        },
+        password: {
+          type: 'string',
+          description: "New seller's password",
+          nullable: true,
+          minLength: 8,
+          example: '12345678',
         },
       },
     },

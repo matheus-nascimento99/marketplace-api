@@ -9,11 +9,13 @@ import { makeAttachment } from 'test/factories/make-attachment'
 import { SellerWithEmailAlreadyExists } from './errors/seller-with-email-already-exists'
 import { SellerWithPhoneAlreadyExists } from './errors/seller-with-phone-already-exists'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found'
+import { FakeHasher } from 'test/hash/fake-hasher'
 
 let inMemorySellersRepository: InMemorySellersRepository
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository
 let inMemorySellersAvatarsRepository: InMemorySellersAvatarsRepository
 let fakeStorage: FakeStorage
+let fakeHasher: FakeHasher
 
 let sut: EditSellerUseCase
 
@@ -26,12 +28,14 @@ describe('Edit seller use case', () => {
       inMemoryAttachmentsRepository,
     )
     fakeStorage = new FakeStorage()
+    fakeHasher = new FakeHasher()
 
     sut = new EditSellerUseCase(
       inMemorySellersRepository,
       inMemoryAttachmentsRepository,
       inMemorySellersAvatarsRepository,
       fakeStorage,
+      fakeHasher,
     )
   })
 

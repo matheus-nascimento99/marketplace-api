@@ -12,6 +12,7 @@ import { StorageDownloader } from '@/core/storage/storage-downloader'
 import { SellersAvatarsRepository } from '../repositories/sellers-avatars'
 import { SellerAvatar } from '../../enterprise/entities/seller-avatar'
 import { SellerWithDetails } from '../../enterprise/value-objects/seller-with-details'
+import { HashCreator } from '@/core/hash/hash-creator'
 
 export type EditSellerUseCaseRequest = {
   sellerId: string
@@ -19,6 +20,7 @@ export type EditSellerUseCaseRequest = {
   phone: string
   email: string
   avatarId: string | null
+  password?: string | null
 }
 
 export type EditSellerUseCaseResponse = Either<
@@ -37,6 +39,7 @@ export class EditSellerUseCase {
     private attachmentsRepository: AttachmentsRepository,
     private sellersAvatarsRepository: SellersAvatarsRepository,
     private storageDownloader: StorageDownloader,
+    private hashCreator: HashCreator,
   ) {}
 
   async execute({
@@ -45,6 +48,7 @@ export class EditSellerUseCase {
     email,
     phone,
     avatarId,
+    password,
   }: EditSellerUseCaseRequest): Promise<EditSellerUseCaseResponse> {
     const seller = await this.sellersRepository.findById(
       new UniqueEntityId(sellerId),
@@ -121,6 +125,10 @@ export class EditSellerUseCase {
     seller.name = name
     seller.phone = rawPhone
     seller.email = email
+
+    if (password) {
+      seller.password = await this.hashCreator.hash(password)
+    }
 
     const sellerWithDetails = await this.sellersRepository.save(
       seller.id,
