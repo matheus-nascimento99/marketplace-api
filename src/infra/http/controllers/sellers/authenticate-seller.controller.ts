@@ -107,7 +107,10 @@ export class AuthenticateSellerController {
 
       switch (error.constructor) {
         case InvalidCredentialsError:
-          throw new UnauthorizedException(error.message)
+          throw new UnauthorizedException({
+            message: error.message,
+            must_logout: false,
+          })
         default:
           throw new InternalServerErrorException(
             'Erro ao logar, tente novamente mais tarde!',
