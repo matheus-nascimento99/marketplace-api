@@ -40,9 +40,12 @@ export class AuthenticateSellerUseCase {
 
     if (!isPasswordEquals) return left(new InvalidCredentialsError())
 
-    const accessToken = await this.cryptographer.encrypt({
-      sub: sellerByEmail.id.toString(),
-    })
+    const accessToken = await this.cryptographer.encrypt(
+      {
+        sub: sellerByEmail.id.toString(),
+      },
+      '30d',
+    )
 
     return right({ accessToken })
   }

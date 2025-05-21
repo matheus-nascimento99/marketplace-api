@@ -40,8 +40,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   private static extractJwtFromCookies(req: Request): string | null {
     if (!req.headers.cookie) return null
 
-    const accessToken = req.headers.cookie.split('=')[1]
-    return accessToken
+    const cookies = req.headers.cookie
+      .split(';')
+      .map((cookie) => cookie.trim())
+      .reduce(
+        (acc, cookie) => {
+          const [name, value] = cookie.split('=')
+          acc[name] = value
+          return acc
+        },
+        {} as Record<string, string>,
+      )
+
+    return cookies.auth || null
   }
 
   async validate(req: Request, payload: UserPayload) {
