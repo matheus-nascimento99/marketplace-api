@@ -43,7 +43,7 @@ describe('Save attachments (e2e)', () => {
     const result = await request(app.getHttpServer())
       .post('/attachments')
       .attach('files', './test/storage/sample-upload.jpg')
-      .expect(201)
+      .expect(200)
 
     expect(result.body).toEqual({
       attachments: [{ id: expect.any(String), url: expect.any(String) }],

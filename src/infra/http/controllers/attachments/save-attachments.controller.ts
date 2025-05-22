@@ -24,7 +24,7 @@ export class SaveAttachmentsController {
   @Post()
   @Public()
   @UseInterceptors(FilesInterceptor('files'))
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Save new attachments' })
   @ApiBody({
     schema: {
@@ -44,7 +44,7 @@ export class SaveAttachmentsController {
     },
   })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.OK,
     description: 'Attachments successfully saved',
     schema: {
       properties: {
