@@ -5,6 +5,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import * as path from 'path'
+import { MetricsInterceptor } from './observability/metrics.interceptor'
+import { PrometheusService } from './observability/prometheus.service'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -45,6 +47,10 @@ async function bootstrap() {
   app.useStaticAssets(tmpPath, {
     prefix: '/tmp/',
   })
+
+  const prometheus = app.get(PrometheusService)
+
+  app.useGlobalInterceptors(new MetricsInterceptor(prometheus))
 
   await app.listen(process.env.PORT ?? 3333)
 }

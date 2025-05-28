@@ -40,10 +40,13 @@ import { GetProductViewsAmountInWeekController } from './controllers/metrics/get
 import { GetProductViewsAmountInWeekUseCase } from '@/domain/marketplace/metrics/application/use-cases/get-product-views-amount-in-week'
 import { FetchViewsAmountPerDayInMonthController } from './controllers/metrics/fetch-views-amount-per-day-in-month.controller'
 import { FetchViewsAmountPerDayInMonthUseCase } from '@/domain/marketplace/metrics/application/use-cases/fetch-views-amount-per-day-in-month'
+import { PrometheusController } from './controllers/observability/prometheus.controller'
+import { PrometheusService } from '../observability/prometheus.service'
 
 @Module({
   imports: [HashModule, DatabaseModule, CryptographyModule, StorageModule],
   controllers: [
+    PrometheusController,
     FetchProductsFromSellerController,
     GetSellerController,
     CreateSellerController,
@@ -66,6 +69,7 @@ import { FetchViewsAmountPerDayInMonthUseCase } from '@/domain/marketplace/metri
     FetchViewsAmountPerDayInMonthController,
   ],
   providers: [
+    PrometheusService,
     CreateSellerUseCase,
     EditSellerUseCase,
     AuthenticateSellerUseCase,
